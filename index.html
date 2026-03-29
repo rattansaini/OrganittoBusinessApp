@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary Meta Tags -->
+    <title>Organitto - Ayurvedic Business Management Platform</title>
+    <meta name="title" content="Organitto - Ayurvedic Business Management Platform" />
+    <meta name="description" content="Complete business management solution for Ayurvedic product companies. Track expenses, manage products, calculate costs, monitor batches, and collaborate with your team." />
+    <meta name="keywords" content="ayurvedic business, herbal products, expense tracking, inventory management, product development, batch tracking, cost calculator, team collaboration, natural products" />
+    <meta name="author" content="Organitto" />
+    <meta name="application-name" content="Organitto" />
+
+    <!-- Theme & PWA Meta Tags -->
+    <meta name="theme-color" content="#2D5016" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Organitto" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Favicons & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/vite.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/vite.svg" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/vite.svg" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://organitto.app/" />
+    <meta property="og:title" content="Organitto - Ayurvedic Business Management" />
+    <meta property="og:description" content="Complete business management solution for Ayurvedic product companies. Track expenses, manage products, and grow your natural business." />
+    <meta property="og:image" content="https://organitto.app/vite.svg" />
+    <meta property="og:site_name" content="Organitto" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://organitto.app/" />
+    <meta name="twitter:title" content="Organitto - Ayurvedic Business Management" />
+    <meta name="twitter:description" content="Natural business management for Ayurvedic entrepreneurs" />
+    <meta name="twitter:image" content="https://organitto.app/vite.svg" />
+    <meta name="twitter:creator" content="@organitto" />
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Preload Critical Resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+    <style>
+      /* Critical CSS for instant load */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #F5F1E8;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      #root {
+        min-height: 100vh;
+      }
+
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #F5F1E8 0%, #E8DCC8 100%);
+        z-index: 9999;
+      }
+
+      .loading-content {
+        text-align: center;
+      }
+
+      .loading-icon {
+        font-size: 64px;
+        margin-bottom: 24px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+
+      .loading-text {
+        color: #2D5016;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #E8DCC8;
+        border-top-color: #2D5016;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body class="font-body">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-icon">🌿</div>
+        <div class="loading-text">Organitto</div>
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      window.addEventListener('load', () => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.3s ease-out';
+            setTimeout(() => {
+              loadingScreen.remove();
+            }, 300);
+          }, 500);
+        }
+      });
+
+      if ('serviceWorker' in navigator && !window.location.hostname.includes('stackblitz')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .then((registration) => {
+              console.log('ServiceWorker registered:', registration);
+
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (newWorker) {
+                  newWorker.addEventListener('statechange', () => {
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                      console.log('New service worker available. Refresh to update.');
+                    }
+                  });
+                }
+              });
+            })
+            .catch((error) => {
+              console.log('ServiceWorker not available:', error.message);
+            });
+        });
+      }
+    </script>
+
+    <!-- Disable right-click context menu in production (optional) -->
+    <noscript>
+      <div style="
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #F5F1E8;
+        padding: 20px;
+        text-align: center;
+        font-family: sans-serif;
+      ">
+        <div>
+          <h1 style="color: #2D5016; margin-bottom: 16px;">JavaScript Required</h1>
+          <p style="color: #8B7355;">Organitto requires JavaScript to run. Please enable JavaScript in your browser settings.</p>
+        </div>
+      </div>
+    </noscript>
+  </body>
+</html>

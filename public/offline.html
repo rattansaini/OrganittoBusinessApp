@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - Organitto</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #F5F1E8 0%, #E8DCC8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 48px 32px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(45, 80, 22, 0.1);
+    }
+
+    .icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      color: #2D5016;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #8B7355;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px;
+      background: #FEF3E8;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: #E67E22;
+      border-radius: 50%;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-text {
+      color: #E67E22;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2D5016 0%, #6B8E23 100%);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45, 80, 22, 0.2);
+    }
+
+    .features {
+      margin-top: 32px;
+      text-align: left;
+    }
+
+    .feature {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #F5F1E8;
+      border-radius: 8px;
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .feature-text {
+      color: #2D5016;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 2px solid #F5F1E8;
+      color: #8B7355;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🌿</div>
+    <h1>You're Offline</h1>
+    <p>It looks like you've lost your internet connection. Don't worry, Organitto works offline!</p>
+
+    <div class="status">
+      <div class="status-dot"></div>
+      <span class="status-text">Waiting for connection...</span>
+    </div>
+
+    <button class="button" onclick="window.location.reload()">
+      Try Again
+    </button>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">✅</div>
+        <div class="feature-text">
+          <strong>View cached data:</strong> Access your recently viewed expenses, products, and dashboard
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">💾</div>
+        <div class="feature-text">
+          <strong>Queue changes:</strong> Your submissions will be saved and synced when you're back online
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-text">
+          <strong>Auto-sync:</strong> Everything will automatically sync when your connection is restored
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Organitto - Natural Business Management
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('online', () => {
+      window.location.reload();
+    });
+
+    setInterval(() => {
+      if (navigator.onLine) {
+        window.location.reload();
+      }
+    }, 5000);
+  </script>
+</body>
+</html>
