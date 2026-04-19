@@ -123,6 +123,12 @@ export default function Login() {
             </button>
           </form>
 
+          <div className="mt-4 text-center">
+            <Link to="/forgot-password" className="text-primary text-sm font-semibold hover:text-sage transition-colors">
+              Forgot Password?
+            </Link>
+          </div>
+
           <div className="mt-6 text-center">
             <p className="text-dark-brown/60 text-sm">
               Don't have an account?{' '}
