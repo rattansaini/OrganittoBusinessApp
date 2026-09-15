@@ -79,9 +79,9 @@ export default function ResetPassword() {
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg p-8 md:p-10">
             <div className="flex items-center justify-center mb-8">
               <img
-                src="/whatsapp_image_2025-10-29_at_11.28.27.jpeg"
+                src="/organitto-logo.png"
                 alt="Organitto - The Organic Choice"
-                className="h-16 w-auto object-contain logo-transparent-light"
+                className="h-16 w-auto object-contain"
               />
             </div>
 
