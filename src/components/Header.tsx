@@ -46,7 +46,7 @@ export default function Header() {
             <img
               src="/organitto-logo.png"
               alt="Organitto - The Organic Choice"
-              className="h-10 md:h-12 w-auto object-contain logo-transparent"
+              className="h-10 md:h-12 w-auto object-contain"
             />
           </Link>
 
