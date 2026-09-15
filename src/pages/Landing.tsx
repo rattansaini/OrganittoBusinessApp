@@ -34,18 +34,11 @@ export default function Landing() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <button
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/login')}
                 className="group relative px-8 py-4 bg-primary text-cream font-semibold text-lg rounded-full shadow-soft-lg hover:shadow-soft transition-all duration-300 hover:scale-105 active:scale-95 min-w-[200px]"
               >
-                <span className="relative z-10">Get Started</span>
+                <span className="relative z-10">Sign In</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-primary to-sage opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
-              </button>
-
-              <button
-                onClick={() => navigate('/login')}
-                className="px-8 py-4 bg-transparent text-primary font-semibold text-lg rounded-full border-2 border-primary hover:bg-primary hover:text-cream transition-all duration-300 hover:scale-105 active:scale-95 min-w-[200px]"
-              >
-                Sign In
               </button>
             </div>
 
