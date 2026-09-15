@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Filter, Search, Eye, CheckCircle, XCircle, Edit2, Trash2, Download, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Plus, Filter, Search, Eye, CheckCircle, XCircle, Edit2, Trash2, Download, ChevronLeft, ChevronRight, X, Upload, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import Header from '../components/Header';
@@ -64,6 +64,7 @@ export default function ExpenseList() {
   const [itemsPerPage, setItemsPerPage] = useState(20);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [uploadingBillId, setUploadingBillId] = useState<string | null>(null);
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -189,6 +190,38 @@ export default function ExpenseList() {
     } catch (error) {
       console.error('Error deleting expense:', error);
       alert('Failed to delete expense. Please try again.');
+    }
+  };
+
+  const handleAttachBill = async (expense: Expense, file: File | null) => {
+    if (!file || !user) return;
+
+    setUploadingBillId(expense.id);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${expense.submitted_by}/${expense.id}-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('expense-bills')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('expense-bills').getPublicUrl(fileName);
+
+      const { error: updateError } = await supabase
+        .from('expenses')
+        .update({ bill_url: data.publicUrl })
+        .eq('id', expense.id);
+
+      if (updateError) throw updateError;
+
+      await fetchExpenses();
+    } catch (error) {
+      console.error('Error uploading bill:', error);
+      alert('Failed to upload bill. Please try again.');
+    } finally {
+      setUploadingBillId(null);
     }
   };
 
@@ -607,6 +640,25 @@ export default function ExpenseList() {
                                 >
                                   <Eye className="w-4 h-4 text-primary" />
                                 </button>
+                              ) : (isAdmin || expense.submitted_by === user?.id) ? (
+                                <label
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold text-primary hover:bg-primary/10 rounded-lg cursor-pointer transition-colors"
+                                >
+                                  {uploadingBillId === expense.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : (
+                                    <Upload className="w-3.5 h-3.5" />
+                                  )}
+                                  Attach
+                                  <input
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    className="hidden"
+                                    disabled={uploadingBillId === expense.id}
+                                    onChange={(e) => handleAttachBill(expense, e.target.files?.[0] || null)}
+                                  />
+                                </label>
                               ) : (
                                 <span className="text-xs text-dark-brown/30">No bill</span>
                               )}
@@ -763,7 +815,7 @@ export default function ExpenseList() {
                     )}
 
                     <div className="flex items-center gap-2 mt-4 pt-3 border-t border-dark-brown/10">
-                      {expense.bill_url && (
+                      {expense.bill_url ? (
                         <button
                           onClick={() => viewBill(expense)}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 text-primary font-semibold rounded-lg hover:bg-primary/20 transition-colors"
@@ -771,7 +823,23 @@ export default function ExpenseList() {
                           <Eye className="w-4 h-4" />
                           View Bill
                         </button>
-                      )}
+                      ) : (isAdmin || expense.submitted_by === user?.id) ? (
+                        <label className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 text-primary font-semibold rounded-lg hover:bg-primary/20 transition-colors cursor-pointer">
+                          {uploadingBillId === expense.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Upload className="w-4 h-4" />
+                          )}
+                          Attach Bill
+                          <input
+                            type="file"
+                            accept="image/*,.pdf"
+                            className="hidden"
+                            disabled={uploadingBillId === expense.id}
+                            onChange={(e) => handleAttachBill(expense, e.target.files?.[0] || null)}
+                          />
+                        </label>
+                      ) : null}
                       {isAdmin && expense.status === 'pending' && (
                         <>
                           <button
