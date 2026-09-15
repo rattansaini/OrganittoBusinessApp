@@ -44,7 +44,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link to="/dashboard" className="flex items-center gap-3">
             <img
-              src="/whatsapp_image_2025-10-29_at_11.28.27.jpeg"
+              src="/organitto-logo.png"
               alt="Organitto - The Organic Choice"
               className="h-10 md:h-12 w-auto object-contain logo-transparent"
             />
