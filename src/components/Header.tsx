@@ -21,11 +21,14 @@ export default function Header() {
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Sales', path: '/orders' },
     { name: 'Inventory', path: '/inventory' },
+    { name: 'Customers', path: '/customers' },
     {
       name: 'Finance',
       path: '/finance',
       submenu: [
         { name: 'Profit & Loss', path: '/profit-loss' },
+        { name: 'Invoices', path: '/invoices' },
+        { name: 'Ad Spend', path: '/ad-spend' },
         { name: 'Add Expense', path: '/expenses/add' },
         { name: 'Expense List', path: '/expenses' },
         { name: 'Reports', path: '/expenses/reports' },
@@ -38,7 +41,7 @@ export default function Header() {
   ];
 
   const isActive = (path: string) => location.pathname === path;
-  const isFinanceActive = () => location.pathname.startsWith('/expenses') || location.pathname.startsWith('/investments') || location.pathname === '/profit-loss' || location.pathname === '/finance';
+  const isFinanceActive = () => location.pathname.startsWith('/expenses') || location.pathname.startsWith('/investments') || location.pathname === '/profit-loss' || location.pathname.startsWith('/invoices') || location.pathname === '/ad-spend' || location.pathname === '/finance';
 
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-2 border-primary/10 shadow-soft">
