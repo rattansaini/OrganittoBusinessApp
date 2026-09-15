@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState } from 'react';
-import { ShoppingBag, Package, IndianRupee, RefreshCw } from 'lucide-react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import { ShoppingBag, Package, IndianRupee, RefreshCw, Plus, X, Save } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import Header from '../components/Header';
@@ -29,6 +29,24 @@ interface SalesOrder {
   sales_order_items: OrderItem[];
 }
 
+const CHANNEL_LABELS: Record<string, string> = {
+  shopify: 'Website',
+  amazon: 'Amazon',
+  nykaa: 'Nykaa',
+  flipkart: 'Flipkart',
+  myntra: 'Myntra',
+  other: 'Other',
+};
+
+const CHANNEL_COLORS: Record<string, string> = {
+  shopify: 'bg-primary/20 text-primary',
+  amazon: 'bg-accent/20 text-accent',
+  nykaa: 'bg-secondary/20 text-secondary',
+  flipkart: 'bg-sage/20 text-sage',
+  myntra: 'bg-soft-red/20 text-soft-red',
+  other: 'bg-dark-brown/20 text-dark-brown',
+};
+
 const statusColor = (status: string | null) => {
   const s = (status || '').toLowerCase();
   if (s === 'paid' || s === 'fulfilled') return 'bg-sage/20 text-sage';
@@ -41,6 +59,17 @@ export default function Orders() {
   const [orders, setOrders] = useState<SalesOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [channelFilter, setChannelFilter] = useState<string>('all');
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [newOrder, setNewOrder] = useState({
+    channel: 'amazon',
+    order_number: '',
+    customer_name: '',
+    customer_phone: '',
+    order_date: format(new Date(), 'yyyy-MM-dd'),
+    total_amount: '',
+  });
 
   useEffect(() => {
     fetchOrders();
@@ -63,11 +92,55 @@ export default function Orders() {
     }
   };
 
-  const totalRevenue = orders.reduce((sum, o) => sum + Number(o.total_amount), 0);
-  const totalItems = orders.reduce(
+  const addManualOrder = async () => {
+    if (!newOrder.order_number.trim() || !newOrder.total_amount) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('sales_orders').insert({
+        channel: newOrder.channel,
+        order_number: newOrder.order_number.trim(),
+        customer_name: newOrder.customer_name.trim() || null,
+        customer_phone: newOrder.customer_phone.trim() || null,
+        total_amount: parseFloat(newOrder.total_amount),
+        currency: 'INR',
+        financial_status: 'paid',
+        fulfillment_status: 'fulfilled',
+        order_date: newOrder.order_date,
+      });
+
+      if (error) throw error;
+      setNewOrder({
+        channel: 'amazon',
+        order_number: '',
+        customer_name: '',
+        customer_phone: '',
+        order_date: format(new Date(), 'yyyy-MM-dd'),
+        total_amount: '',
+      });
+      setShowAddForm(false);
+      await fetchOrders();
+    } catch (error) {
+      console.error('Error adding order:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const filteredOrders = channelFilter === 'all' ? orders : orders.filter((o) => o.channel === channelFilter);
+
+  const totalRevenue = filteredOrders.reduce((sum, o) => sum + Number(o.total_amount), 0);
+  const totalItems = filteredOrders.reduce(
     (sum, o) => sum + o.sales_order_items.reduce((s, i) => s + i.quantity, 0),
     0
   );
+
+  const channelTotals = useMemo(() => {
+    const totals: Record<string, number> = {};
+    orders.forEach((o) => {
+      totals[o.channel] = (totals[o.channel] || 0) + Number(o.total_amount);
+    });
+    return totals;
+  }, [orders]);
 
   return (
     <div className="min-h-screen bg-cream relative overflow-hidden">
@@ -87,15 +160,24 @@ export default function Orders() {
               <h2 className="font-heading text-4xl md:text-5xl font-bold text-primary mb-2">
                 Sales Orders
               </h2>
-              <p className="text-dark-brown/70 text-lg">Synced from your Shopify store</p>
+              <p className="text-dark-brown/70 text-lg">From your website and marketplaces</p>
             </div>
-            <button
-              onClick={fetchOrders}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/80 border-2 border-primary/10 rounded-xl text-dark-brown hover:border-primary/30 transition-all duration-300"
-            >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary text-cream rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 shadow-soft"
+              >
+                <Plus className="w-4 h-4" />
+                Add Order
+              </button>
+              <button
+                onClick={fetchOrders}
+                className="flex items-center gap-2 px-4 py-2.5 bg-white/80 border-2 border-primary/10 rounded-xl text-dark-brown hover:border-primary/30 transition-all duration-300"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Refresh
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -109,7 +191,7 @@ export default function Orders() {
             />
             <StatsCard
               title="Total Orders"
-              value={orders.length.toString()}
+              value={filteredOrders.length.toString()}
               icon={ShoppingBag}
               iconBgColor="bg-accent/20"
               iconColor="text-accent"
@@ -125,12 +207,104 @@ export default function Orders() {
             />
           </div>
 
+          <div className="flex flex-wrap items-center gap-2 mb-8">
+            <button
+              onClick={() => setChannelFilter('all')}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                channelFilter === 'all' ? 'bg-primary text-cream' : 'bg-white/80 border-2 border-primary/10 text-dark-brown'
+              }`}
+            >
+              All Channels
+            </button>
+            {Object.entries(channelTotals).map(([channel, amount]) => (
+              <button
+                key={channel}
+                onClick={() => setChannelFilter(channel)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  channelFilter === channel ? 'bg-primary text-cream' : `${CHANNEL_COLORS[channel] || 'bg-dark-brown/20 text-dark-brown'}`
+                }`}
+              >
+                {CHANNEL_LABELS[channel] || channel}: ₹{amount.toLocaleString('en-IN')}
+              </button>
+            ))}
+          </div>
+
+          {showAddForm && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg p-6 mb-8 border-2 border-primary/10">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-heading text-xl font-bold text-primary">Add Order</h3>
+                <button onClick={() => setShowAddForm(false)} className="text-dark-brown/60 hover:text-dark-brown">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <p className="text-sm text-dark-brown/60 mb-4">
+                For orders placed on Amazon, Nykaa, Flipkart, Myntra or other channels that aren't auto-synced.
+                Website orders sync automatically from Shopify — no need to add those here.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <select
+                  value={newOrder.channel}
+                  onChange={(e) => setNewOrder({ ...newOrder, channel: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                >
+                  <option value="amazon">Amazon</option>
+                  <option value="nykaa">Nykaa</option>
+                  <option value="flipkart">Flipkart</option>
+                  <option value="myntra">Myntra</option>
+                  <option value="other">Other</option>
+                </select>
+                <input
+                  type="text"
+                  placeholder="Order number *"
+                  value={newOrder.order_number}
+                  onChange={(e) => setNewOrder({ ...newOrder, order_number: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                />
+                <input
+                  type="number"
+                  placeholder="Amount (₹) *"
+                  value={newOrder.total_amount}
+                  onChange={(e) => setNewOrder({ ...newOrder, total_amount: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                />
+                <input
+                  type="text"
+                  placeholder="Customer name (optional)"
+                  value={newOrder.customer_name}
+                  onChange={(e) => setNewOrder({ ...newOrder, customer_name: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                />
+                <input
+                  type="text"
+                  placeholder="Customer phone (optional)"
+                  value={newOrder.customer_phone}
+                  onChange={(e) => setNewOrder({ ...newOrder, customer_phone: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                />
+                <input
+                  type="date"
+                  value={newOrder.order_date}
+                  onChange={(e) => setNewOrder({ ...newOrder, order_date: e.target.value })}
+                  className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
+                />
+              </div>
+              <button
+                onClick={addManualOrder}
+                disabled={saving || !newOrder.order_number.trim() || !newOrder.total_amount}
+                className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-primary text-cream rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                Save Order
+              </button>
+            </div>
+          )}
+
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg overflow-hidden">
             {loading ? (
               <div className="p-12 text-center text-dark-brown/60">Loading orders...</div>
-            ) : orders.length === 0 ? (
+            ) : filteredOrders.length === 0 ? (
               <div className="p-12 text-center text-dark-brown/60">
-                No orders synced yet. New Shopify orders will appear here automatically.
+                No orders yet. Website orders sync automatically; add Amazon, Nykaa, Flipkart or Myntra orders with "Add Order".
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -138,6 +312,7 @@ export default function Orders() {
                   <thead>
                     <tr className="border-b-2 border-primary/10 text-left">
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Order</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Source</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Customer</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Date</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Payment</th>
@@ -146,13 +321,18 @@ export default function Orders() {
                     </tr>
                   </thead>
                   <tbody>
-                    {orders.map((order) => (
+                    {filteredOrders.map((order) => (
                       <Fragment key={order.id}>
                         <tr
                           onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
                           className="border-b border-primary/5 hover:bg-cream/60 cursor-pointer transition-colors"
                         >
                           <td className="px-6 py-4 font-semibold text-primary">{order.order_number}</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${CHANNEL_COLORS[order.channel] || 'bg-dark-brown/20 text-dark-brown'}`}>
+                              {CHANNEL_LABELS[order.channel] || order.channel}
+                            </span>
+                          </td>
                           <td className="px-6 py-4 text-dark-brown">
                             <div>{order.customer_name || '—'}</div>
                             {order.customer_phone && (
@@ -178,19 +358,23 @@ export default function Orders() {
                         </tr>
                         {expandedId === order.id && (
                           <tr key={`${order.id}-detail`} className="bg-cream/40">
-                            <td colSpan={6} className="px-6 py-4">
-                              <div className="space-y-2">
-                                {order.sales_order_items.map((item) => (
-                                  <div key={item.id} className="flex items-center justify-between text-sm">
-                                    <span className="text-dark-brown">
-                                      {item.product_name} {item.sku ? `(${item.sku})` : ''} × {item.quantity}
-                                    </span>
-                                    <span className="text-dark-brown/70">
-                                      ₹{Number(item.total_price).toLocaleString('en-IN')}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
+                            <td colSpan={7} className="px-6 py-4">
+                              {order.sales_order_items.length === 0 ? (
+                                <p className="text-sm text-dark-brown/50">No line items recorded for this order.</p>
+                              ) : (
+                                <div className="space-y-2">
+                                  {order.sales_order_items.map((item) => (
+                                    <div key={item.id} className="flex items-center justify-between text-sm">
+                                      <span className="text-dark-brown">
+                                        {item.product_name} {item.sku ? `(${item.sku})` : ''} × {item.quantity}
+                                      </span>
+                                      <span className="text-dark-brown/70">
+                                        ₹{Number(item.total_price).toLocaleString('en-IN')}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </td>
                           </tr>
                         )}
