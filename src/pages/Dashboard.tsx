@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Leaf, Receipt, TrendingUp, Scale } from 'lucide-react';
+import { Leaf, Receipt, TrendingUp, Scale, ShoppingBag, LineChart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import Header from '../components/Header';
@@ -15,6 +15,8 @@ export default function Dashboard() {
     totalInvestments: 0,
     totalExpenses: 0,
     activeProducts: 0,
+    totalSales: 0,
+    totalOrders: 0,
   });
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function Dashboard() {
     if (!user) return;
 
     try {
-      const [investmentsRes, expensesRes, productsRes, activitiesRes] = await Promise.all([
+      const [investmentsRes, expensesRes, productsRes, activitiesRes, salesRes] = await Promise.all([
         supabase
           .from('investments')
           .select('amount')
@@ -67,6 +69,9 @@ export default function Dashboard() {
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(10),
+        supabase
+          .from('sales_orders')
+          .select('total_amount'),
       ]);
 
       const totalInvestments = investmentsRes.data?.reduce(
@@ -79,10 +84,17 @@ export default function Dashboard() {
         0
       ) || 0;
 
+      const totalSales = salesRes.data?.reduce(
+        (sum, item) => sum + parseFloat(item.total_amount.toString()),
+        0
+      ) || 0;
+
       setStats({
         totalInvestments,
         totalExpenses,
         activeProducts: productsRes.data?.length || 0,
+        totalSales,
+        totalOrders: salesRes.data?.length || 0,
       });
 
       setActivities(activitiesRes.data || []);
@@ -95,6 +107,9 @@ export default function Dashboard() {
 
   const netBalance = stats.totalInvestments - stats.totalExpenses;
   const netBalanceColor = netBalance >= 0 ? 'text-sage' : 'text-soft-red';
+
+  const netProfit = stats.totalSales - stats.totalExpenses;
+  const netProfitColor = netProfit >= 0 ? 'text-sage' : 'text-soft-red';
 
   return (
     <div className="min-h-screen bg-cream relative overflow-hidden">
@@ -153,6 +168,25 @@ export default function Dashboard() {
               iconBgColor="bg-accent/20"
               iconColor="text-accent"
               valueColor="text-dark-brown"
+            />
+
+            <StatsCard
+              title="Total Sales (Shopify)"
+              value={`₹${stats.totalSales.toLocaleString('en-IN')}`}
+              trend={{ value: stats.totalOrders, label: 'orders synced' }}
+              icon={ShoppingBag}
+              iconBgColor="bg-primary/20"
+              iconColor="text-primary"
+              valueColor="text-primary"
+            />
+
+            <StatsCard
+              title="Net Profit (Sales − Expenses)"
+              value={`₹${netProfit.toLocaleString('en-IN')}`}
+              icon={LineChart}
+              iconBgColor="bg-sage/20"
+              iconColor="text-sage"
+              valueColor={netProfitColor}
             />
           </div>
 
