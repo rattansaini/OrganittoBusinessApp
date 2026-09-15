@@ -90,6 +90,10 @@ export default function AdSpend() {
   };
 
   const deleteSpend = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this ad spend entry? This action cannot be undone.')) {
+      return;
+    }
+
     try {
       const { error } = await supabase.from('ad_spend').delete().eq('id', id);
       if (error) throw error;
