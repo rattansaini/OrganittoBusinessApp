@@ -1,7 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Leaf, Bell, User, Settings, LogOut, Menu, X, Shield, ChevronDown } from 'lucide-react';
+import { Leaf, Bell, User, Settings, LogOut, Menu, X, Shield, ChevronDown, AlertTriangle, FileText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+
+interface LowStockItem {
+  id: string;
+  product_name: string;
+  quantity_available: number;
+  reorder_level: number;
+}
+
+interface UninvoicedOrder {
+  id: string;
+  order_number: string;
+  total_amount: number;
+}
 
 export default function Header() {
   const { user, signOut } = useAuth();
@@ -10,7 +24,36 @@ export default function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showFinanceMenu, setShowFinanceMenu] = useState(false);
-  const notificationCount = 3;
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [lowStockItems, setLowStockItems] = useState<LowStockItem[]>([]);
+  const [uninvoicedOrders, setUninvoicedOrders] = useState<UninvoicedOrder[]>([]);
+
+  useEffect(() => {
+    if (user) fetchNotifications();
+  }, [user]);
+
+  const fetchNotifications = async () => {
+    try {
+      const [inventoryRes, ordersRes, invoicesRes] = await Promise.all([
+        supabase.from('finished_goods_inventory').select('id, product_name, quantity_available, reorder_level'),
+        supabase.from('sales_orders').select('id, order_number, total_amount'),
+        supabase.from('invoices').select('order_id'),
+      ]);
+
+      const lowStock = (inventoryRes.data || []).filter(
+        (item) => item.quantity_available <= item.reorder_level
+      );
+      setLowStockItems(lowStock);
+
+      const invoicedOrderIds = new Set((invoicesRes.data || []).map((inv) => inv.order_id));
+      const uninvoiced = (ordersRes.data || []).filter((o) => !invoicedOrderIds.has(o.id));
+      setUninvoicedOrders(uninvoiced);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const notificationCount = lowStockItems.length + uninvoicedOrders.length;
 
   const handleSignOut = async () => {
     await signOut();
@@ -115,14 +158,75 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <button className="relative p-2 text-dark-brown hover:bg-primary/10 rounded-lg transition-all duration-300">
-              <Bell className="w-5 h-5" />
-              {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-white text-xs font-bold rounded-full flex items-center justify-center">
-                  {notificationCount}
-                </span>
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-2 text-dark-brown hover:bg-primary/10 rounded-lg transition-all duration-300"
+              >
+                <Bell className="w-5 h-5" />
+                {notificationCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {notificationCount}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-soft-lg border-2 border-primary/10 overflow-hidden z-50">
+                    <div className="p-4 bg-cream/50 border-b-2 border-primary/10">
+                      <p className="font-semibold text-dark-brown">Notifications</p>
+                    </div>
+                    {notificationCount === 0 ? (
+                      <div className="p-6 text-center text-dark-brown/50 text-sm">
+                        You're all caught up.
+                      </div>
+                    ) : (
+                      <div className="max-h-80 overflow-y-auto">
+                        {lowStockItems.map((item) => (
+                          <Link
+                            key={item.id}
+                            to="/inventory"
+                            onClick={() => setShowNotifications(false)}
+                            className="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors border-b border-primary/5"
+                          >
+                            <AlertTriangle className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium text-dark-brown">Low stock: {item.product_name}</p>
+                              <p className="text-xs text-dark-brown/50">
+                                {item.quantity_available} left (reorder at {item.reorder_level})
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                        {uninvoicedOrders.map((order) => (
+                          <Link
+                            key={order.id}
+                            to="/invoices"
+                            onClick={() => setShowNotifications(false)}
+                            className="flex items-start gap-3 px-4 py-3 hover:bg-primary/5 transition-colors border-b border-primary/5"
+                          >
+                            <FileText className="w-4 h-4 text-secondary flex-shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium text-dark-brown">
+                                Order {order.order_number} needs an invoice
+                              </p>
+                              <p className="text-xs text-dark-brown/50">
+                                ₹{Number(order.total_amount).toLocaleString('en-IN')}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
-            </button>
+            </div>
 
             <div className="relative">
               <button
