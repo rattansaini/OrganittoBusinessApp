@@ -19,6 +19,7 @@ export default function Header() {
 
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Sales', path: '/orders' },
     {
       name: 'Finance',
       path: '/finance',
