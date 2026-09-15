@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText, CheckSquare, Clock, FileSearch, Edit, Trash2 } from 'lucide-react';
-import Header from '../components/Header';
 import LicenseDetailsTab from '../components/license-detail/LicenseDetailsTab';
 import LicenseDocumentsTab from '../components/license-detail/LicenseDocumentsTab';
 import LicenseComplianceTab from '../components/license-detail/LicenseComplianceTab';
@@ -9,6 +8,10 @@ import LicenseRenewalHistoryTab from '../components/license-detail/LicenseRenewa
 import LicenseAuditLogTab from '../components/license-detail/LicenseAuditLogTab';
 import { supabase } from '../lib/supabase';
 import { differenceInDays, format } from 'date-fns';
+import { useToast } from '../contexts/ToastContext';
+import { useConfirm } from '../contexts/ConfirmContext';
+import { PageLoader } from '../components/LoadingState';
+import AdminOnly from '../components/AdminOnly';
 
 const tabs = [
   { id: 'details', label: 'Details', icon: FileText },
@@ -34,6 +37,8 @@ const LICENSE_TYPES: any = {
 export default function LicenseDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [license, setLicense] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('details');
   const [loading, setLoading] = useState(true);
@@ -62,7 +67,10 @@ export default function LicenseDetail() {
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this license? This action cannot be undone.')) {
+    const confirmed = await confirm({
+      message: 'Are you sure you want to delete this license? This action cannot be undone.',
+    });
+    if (!confirmed) {
       return;
     }
 
@@ -76,7 +84,7 @@ export default function LicenseDetail() {
       navigate('/compliance');
     } catch (error) {
       console.error('Error deleting license:', error);
-      alert('Error deleting license');
+      toast.error('Error deleting license');
     }
   };
 
@@ -105,34 +113,19 @@ export default function LicenseDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-cream">
-        <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-dark-brown/60">Loading license details...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <PageLoader label="Loading license details..." />;
   }
 
   if (!license) {
     return (
-      <div className="min-h-screen bg-cream">
-        <Header />
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <p className="text-xl text-dark-brown/60">License not found</p>
-            <button
-              onClick={() => navigate('/compliance')}
-              className="mt-4 px-6 py-3 bg-primary text-white rounded-xl font-semibold"
-            >
-              Back to Compliance
-            </button>
-          </div>
-        </div>
+      <div className="text-center py-12">
+        <p className="text-xl text-dark-brown/60">License not found</p>
+        <button
+          onClick={() => navigate('/compliance')}
+          className="mt-4 px-6 py-3 bg-primary text-white rounded-xl font-semibold"
+        >
+          Back to Compliance
+        </button>
       </div>
     );
   }
@@ -144,41 +137,39 @@ export default function LicenseDetail() {
     : null;
 
   return (
-    <div className="min-h-screen bg-cream">
-      <Header />
+    <>
+      <button
+        onClick={() => navigate('/compliance')}
+        className="flex items-center gap-2 text-dark-brown hover:text-primary mb-6 font-semibold transition-colors"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Back to Compliance
+      </button>
 
-      <div className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => navigate('/compliance')}
-          className="flex items-center gap-2 text-dark-brown hover:text-primary mb-6 font-semibold transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Compliance
-        </button>
-
-        <div className="bg-white rounded-2xl shadow-soft p-6 mb-6">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-start gap-4 mb-3">
-                <div className="text-5xl">{typeInfo.icon}</div>
-                <div>
-                  <h1 className="font-heading text-3xl font-bold text-primary mb-1">
-                    {typeInfo.label}
-                  </h1>
-                  <p className="text-lg font-mono text-dark-brown/70 mb-2">
-                    {license.license_number}
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {statusBadge && (
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusBadge.color}`}>
-                        {statusBadge.label}
-                      </span>
-                    )}
-                  </div>
+      <div className="bg-white rounded-2xl shadow-soft p-6 mb-6">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-start gap-4 mb-3">
+              <div className="text-5xl">{typeInfo.icon}</div>
+              <div>
+                <h1 className="font-heading text-3xl font-bold text-primary mb-1">
+                  {typeInfo.label}
+                </h1>
+                <p className="text-lg font-mono text-dark-brown/70 mb-2">
+                  {license.license_number}
+                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {statusBadge && (
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusBadge.color}`}>
+                      {statusBadge.label}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
+          </div>
 
+          <AdminOnly>
             <div className="flex items-center gap-3 flex-wrap">
               <button className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-xl font-semibold hover:bg-primary/20 transition-colors">
                 <Edit className="w-4 h-4" />
@@ -192,72 +183,72 @@ export default function LicenseDetail() {
                 Delete
               </button>
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t-2 border-dark-brown/5">
-            <div>
-              <p className="text-sm text-dark-brown/60 mb-1">Issuing Authority</p>
-              <p className="font-semibold text-dark-brown">{license.issuing_authority}</p>
-            </div>
-            <div>
-              <p className="text-sm text-dark-brown/60 mb-1">Issue Date</p>
-              <p className="font-semibold text-dark-brown">
-                {format(new Date(license.issue_date), 'MMM dd, yyyy')}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-dark-brown/60 mb-1">Expiry Date</p>
-              <p className={`font-semibold ${getExpiryStatusColor()}`}>
-                {license.expiry_date
-                  ? format(new Date(license.expiry_date), 'MMM dd, yyyy')
-                  : 'No Expiry'}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-dark-brown/60 mb-1">Days Until Expiry</p>
-              <p className={`font-semibold text-xl ${getExpiryStatusColor()}`}>
-                {daysUntilExpiry !== null
-                  ? daysUntilExpiry >= 0
-                    ? `${daysUntilExpiry} days`
-                    : 'Expired'
-                  : 'N/A'}
-              </p>
-            </div>
-          </div>
+          </AdminOnly>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
-          <div className="border-b-2 border-dark-brown/5 overflow-x-auto">
-            <div className="flex">
-              {tabs.map(tab => {
-                const Icon = tab.icon;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all whitespace-nowrap ${
-                      activeTab === tab.id
-                        ? 'text-primary border-b-4 border-primary bg-primary/5'
-                        : 'text-dark-brown/60 hover:text-primary hover:bg-primary/5'
-                    }`}
-                  >
-                    <Icon className="w-5 h-5" />
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t-2 border-dark-brown/5">
+          <div>
+            <p className="text-sm text-dark-brown/60 mb-1">Issuing Authority</p>
+            <p className="font-semibold text-dark-brown">{license.issuing_authority}</p>
           </div>
-
-          <div className="p-6">
-            {activeTab === 'details' && <LicenseDetailsTab licenseId={id!} license={license} onUpdate={fetchLicense} />}
-            {activeTab === 'documents' && <LicenseDocumentsTab licenseId={id!} />}
-            {activeTab === 'compliance' && <LicenseComplianceTab licenseId={id!} license={license} onUpdate={fetchLicense} />}
-            {activeTab === 'renewal' && <LicenseRenewalHistoryTab licenseId={id!} license={license} />}
-            {activeTab === 'audit' && <LicenseAuditLogTab licenseId={id!} />}
+          <div>
+            <p className="text-sm text-dark-brown/60 mb-1">Issue Date</p>
+            <p className="font-semibold text-dark-brown">
+              {format(new Date(license.issue_date), 'MMM dd, yyyy')}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-dark-brown/60 mb-1">Expiry Date</p>
+            <p className={`font-semibold ${getExpiryStatusColor()}`}>
+              {license.expiry_date
+                ? format(new Date(license.expiry_date), 'MMM dd, yyyy')
+                : 'No Expiry'}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-dark-brown/60 mb-1">Days Until Expiry</p>
+            <p className={`font-semibold text-xl ${getExpiryStatusColor()}`}>
+              {daysUntilExpiry !== null
+                ? daysUntilExpiry >= 0
+                  ? `${daysUntilExpiry} days`
+                  : 'Expired'
+                : 'N/A'}
+            </p>
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
+        <div className="border-b-2 border-dark-brown/5 overflow-x-auto">
+          <div className="flex">
+            {tabs.map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-6 py-4 font-semibold transition-all whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? 'text-primary border-b-4 border-primary bg-primary/5'
+                      : 'text-dark-brown/60 hover:text-primary hover:bg-primary/5'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-6">
+          {activeTab === 'details' && <LicenseDetailsTab licenseId={id!} license={license} onUpdate={fetchLicense} />}
+          {activeTab === 'documents' && <LicenseDocumentsTab licenseId={id!} />}
+          {activeTab === 'compliance' && <LicenseComplianceTab licenseId={id!} license={license} onUpdate={fetchLicense} />}
+          {activeTab === 'renewal' && <LicenseRenewalHistoryTab licenseId={id!} license={license} />}
+          {activeTab === 'audit' && <LicenseAuditLogTab licenseId={id!} />}
+        </div>
+      </div>
+    </>
   );
 }
