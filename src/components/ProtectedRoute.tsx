@@ -1,6 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Loader } from 'lucide-react';
+import AppShell from './AppShell';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -24,5 +25,5 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return <AppShell>{children}</AppShell>;
 }
