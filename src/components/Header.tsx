@@ -32,7 +32,6 @@ export default function Header() {
     { name: 'Products', path: '/products' },
     { name: 'Calculator', path: '/calculator' },
     { name: 'Vendors', path: '/vendors' },
-    { name: 'Documents', path: '/documents' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
