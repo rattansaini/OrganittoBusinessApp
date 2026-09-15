@@ -25,7 +25,7 @@ export default function StatsCard({
   const isPositive = trend && trend.value >= 0;
 
   return (
-    <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 hover:shadow-e2 transition-all duration-300 hover:scale-[1.02]">
+    <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk">
       <div className="flex items-start justify-between mb-4">
         <div className={`w-12 h-12 ${iconBgColor} rounded-full flex items-center justify-center`}>
           <Icon className={`w-6 h-6 ${iconColor}`} />

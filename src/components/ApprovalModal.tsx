@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
 
 interface ApprovalModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function ApprovalModal({
   expense,
   loading = false,
 }: ApprovalModalProps) {
+  const toast = useToast();
   const [comments, setComments] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
   const [customReason, setCustomReason] = useState('');
@@ -44,7 +46,7 @@ export default function ApprovalModal({
     if (type === 'reject') {
       const reason = selectedReason === 'Other (specify below)' ? customReason : selectedReason;
       if (!reason.trim()) {
-        alert('Please provide a reason for rejection');
+        toast.error('Please provide a reason for rejection');
         return;
       }
       onConfirm(undefined, reason);
@@ -200,7 +202,7 @@ export default function ApprovalModal({
             <button
               onClick={handleConfirm}
               disabled={loading}
-              className={`flex-1 px-6 py-3 text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`flex-1 px-6 py-3 text-white font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft ${
                 type === 'approve' ? 'bg-sage' : 'bg-soft-red'
               }`}
             >

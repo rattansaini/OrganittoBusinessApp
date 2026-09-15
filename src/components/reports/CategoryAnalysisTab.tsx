@@ -142,7 +142,7 @@ export default function CategoryAnalysisTab({ expenses }: CategoryAnalysisTabPro
             <div
               key={cat.category}
               onClick={() => setSelectedCategory(cat.category)}
-              className={`bg-gradient-to-br from-white to-cream rounded-xl p-6 border-2 shadow-soft cursor-pointer transition-all duration-300 hover:shadow-soft-lg hover:scale-[1.02] ${
+              className={`bg-gradient-to-br from-white to-cream rounded-xl p-6 border-2 shadow-soft cursor-pointer hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk ${
                 selectedCategory === cat.category
                   ? 'border-accent ring-2 ring-accent/20'
                   : 'border-dark-brown/10'

@@ -95,7 +95,7 @@ export default function ResetPassword() {
 
             <button
               onClick={() => navigate('/login')}
-              className="w-full mt-6 py-3.5 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95"
+              className="w-full mt-6 py-3.5 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk"
             >
               Back to Login
             </button>
@@ -201,7 +201,7 @@ export default function ResetPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="w-full py-3.5 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft"
               >
                 {loading ? 'Resetting...' : 'Reset Password'}
               </button>

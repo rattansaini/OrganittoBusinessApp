@@ -474,7 +474,7 @@ export default function AddExpense() {
               type="button"
               onClick={() => handleSubmit('pending')}
               disabled={loading}
-              className="flex-1 py-4 bg-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+              className="flex-1 py-4 bg-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -490,7 +490,7 @@ export default function AddExpense() {
               type="button"
               onClick={() => handleSubmit('draft')}
               disabled={loading}
-              className="px-8 py-4 bg-transparent text-primary font-semibold rounded-xl border-2 border-primary hover:bg-primary hover:text-cream transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-4 bg-transparent text-primary font-semibold rounded-xl border-2 border-primary hover:bg-primary hover:text-cream hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,background-color,color] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
               Save as Draft
             </button>

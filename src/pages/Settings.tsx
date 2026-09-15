@@ -246,7 +246,7 @@ export default function Settings() {
                   <button
                     type="submit"
                     disabled={profileLoading}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft"
                   >
                     <Save className="w-5 h-5" />
                     {profileLoading ? 'Saving...' : 'Save Changes'}
@@ -351,7 +351,7 @@ export default function Settings() {
                   <button
                     type="submit"
                     disabled={passwordLoading}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-cream font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft"
                   >
                     <Lock className="w-5 h-5" />
                     {passwordLoading ? 'Changing...' : 'Change Password'}

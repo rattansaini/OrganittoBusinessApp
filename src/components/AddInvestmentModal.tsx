@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Upload, DollarSign, Calendar, Tag, FileText, CheckCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface AddInvestmentModalProps {
   isOpen: boolean;
@@ -34,6 +35,7 @@ export default function AddInvestmentModal({
   preselectedPartnerId,
 }: AddInvestmentModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [partners, setPartners] = useState<Partner[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -81,7 +83,7 @@ export default function AddInvestmentModal({
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        alert('File size must be less than 10MB');
+        toast.error('File size must be less than 10MB');
         return;
       }
       setFormData({ ...formData, paymentProofFile: file });
@@ -115,13 +117,13 @@ export default function AddInvestmentModal({
     e.preventDefault();
 
     if (!formData.partnerId || !formData.amount || !formData.purpose) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
 
     const amount = parseFloat(formData.amount);
     if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid positive amount');
+      toast.error('Please enter a valid positive amount');
       return;
     }
 
@@ -169,7 +171,7 @@ export default function AddInvestmentModal({
       resetForm();
     } catch (error) {
       console.error('Error adding investment:', error);
-      alert('Failed to add investment. Please try again.');
+      toast.error('Failed to add investment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -417,7 +419,7 @@ export default function AddInvestmentModal({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-soft flex items-center justify-center gap-2"
             >
               {loading ? (
                 'Recording...'
