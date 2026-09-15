@@ -14,6 +14,7 @@ import AddExpense from './pages/AddExpense';
 import ExpenseList from './pages/ExpenseList';
 import ExpenseReports from './pages/ExpenseReports';
 import Investments from './pages/Investments';
+import Orders from './pages/Orders';
 import ProductPipeline from './pages/ProductPipeline';
 import ProductDetail from './pages/ProductDetail';
 import CostCalculator from './pages/CostCalculator';
@@ -78,6 +79,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Investments />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <ProtectedRoute>
+                <Orders />
               </ProtectedRoute>
             }
           />
