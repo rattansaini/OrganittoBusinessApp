@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { User, Mail, Phone, Lock, Save, AlertCircle, CheckCircle, Shield } from 'lucide-react';
 import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -31,39 +32,29 @@ export default function Settings() {
     setProfileLoading(true);
     setProfileMessage(null);
 
+    if (!user) {
+      setProfileLoading(false);
+      return;
+    }
+
     try {
-      const storedUsers = localStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-      const userIndex = users.findIndex((u: any) => u.id === user?.id);
-
-      if (userIndex !== -1) {
-        users[userIndex] = {
-          ...users[userIndex],
+      const { error } = await supabase
+        .from('users')
+        .update({
           name: profileData.name,
-          email: profileData.email,
           phone: profileData.phone,
-        };
+        })
+        .eq('id', user.id);
 
-        localStorage.setItem('users', JSON.stringify(users));
+      if (error) throw error;
 
-        const updatedUser = {
-          id: users[userIndex].id,
-          name: users[userIndex].name,
-          email: users[userIndex].email,
-          phone: users[userIndex].phone,
-          role: users[userIndex].role,
-        };
+      setProfileMessage({ type: 'success', text: 'Profile updated successfully' });
 
-        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-
-        setProfileMessage({ type: 'success', text: 'Profile updated successfully' });
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      }
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
+      console.error('Error updating profile:', error);
       setProfileMessage({ type: 'error', text: 'Failed to update profile' });
     } finally {
       setProfileLoading(false);
@@ -87,26 +78,37 @@ export default function Settings() {
       return;
     }
 
+    if (!user?.email) {
+      setPasswordLoading(false);
+      return;
+    }
+
     try {
-      const storedUsers = localStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: passwordData.currentPassword,
+      });
 
-      const userIndex = users.findIndex((u: any) => u.id === user?.id && u.password === passwordData.currentPassword);
-
-      if (userIndex !== -1) {
-        users[userIndex].password = passwordData.newPassword;
-        localStorage.setItem('users', JSON.stringify(users));
-
-        setPasswordMessage({ type: 'success', text: 'Password changed successfully' });
-        setPasswordData({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: '',
-        });
-      } else {
+      if (signInError) {
         setPasswordMessage({ type: 'error', text: 'Current password is incorrect' });
+        setPasswordLoading(false);
+        return;
       }
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: passwordData.newPassword,
+      });
+
+      if (updateError) throw updateError;
+
+      setPasswordMessage({ type: 'success', text: 'Password changed successfully' });
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
     } catch (error) {
+      console.error('Error changing password:', error);
       setPasswordMessage({ type: 'error', text: 'Failed to change password' });
     } finally {
       setPasswordLoading(false);
@@ -221,12 +223,11 @@ export default function Settings() {
                           id="email"
                           type="email"
                           value={profileData.email}
-                          onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                          className="w-full pl-12 pr-4 py-3 border-2 border-dark-brown/10 rounded-xl focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all duration-300"
-                          required
-                          disabled={profileLoading}
+                          className="w-full pl-12 pr-4 py-3 border-2 border-dark-brown/10 rounded-xl bg-dark-brown/5 text-dark-brown/60 cursor-not-allowed"
+                          disabled
                         />
                       </div>
+                      <p className="text-xs text-dark-brown/60 mt-1">Contact your admin to change your login email.</p>
                     </div>
 
                     <div>
