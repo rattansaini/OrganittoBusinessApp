@@ -17,6 +17,10 @@ import Investments from './pages/Investments';
 import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import ProfitLoss from './pages/ProfitLoss';
+import Customers from './pages/Customers';
+import AdSpend from './pages/AdSpend';
+import Invoices from './pages/Invoices';
+import InvoiceDetail from './pages/InvoiceDetail';
 import ProductPipeline from './pages/ProductPipeline';
 import ProductDetail from './pages/ProductDetail';
 import CostCalculator from './pages/CostCalculator';
@@ -105,6 +109,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfitLoss />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customers"
+            element={
+              <ProtectedRoute>
+                <Customers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ad-spend"
+            element={
+              <ProtectedRoute>
+                <AdSpend />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/invoices"
+            element={
+              <ProtectedRoute>
+                <Invoices />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/invoices/:orderId"
+            element={
+              <ProtectedRoute>
+                <InvoiceDetail />
               </ProtectedRoute>
             }
           />
