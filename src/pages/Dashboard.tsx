@@ -2,12 +2,27 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Leaf, Receipt, TrendingUp, Scale, ShoppingBag, LineChart } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { format } from 'date-fns';
+import { format, subMonths, startOfMonth } from 'date-fns';
 import Header from '../components/Header';
 import StatsCard from '../components/StatsCard';
 import InvestmentExpenseChart from '../components/InvestmentExpenseChart';
 import ExpenseCategoryChart from '../components/ExpenseCategoryChart';
 import ActivityFeed from '../components/ActivityFeed';
+
+const CATEGORY_LABELS: Record<string, string> = {
+  raw_materials: 'Raw Materials',
+  packaging: 'Packaging',
+  printing: 'Printing',
+  shipping: 'Shipping & Logistics',
+  marketing: 'Marketing & Advertising',
+  lab_testing: 'Lab Testing',
+  licenses: 'Licenses & Compliance',
+  utilities: 'Utilities',
+  rent: 'Rent & Infrastructure',
+  salaries: 'Salaries & Wages',
+  equipment: 'Equipment & Machinery',
+  other: 'Other',
+};
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -19,27 +34,11 @@ export default function Dashboard() {
     totalOrders: 0,
   });
   const [activities, setActivities] = useState<any[]>([]);
+  const [monthlyData, setMonthlyData] = useState<{ month: string; investments: number; expenses: number }[]>([]);
+  const [categoryData, setCategoryData] = useState<{ name: string; value: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   const currentDate = format(new Date(), 'EEEE, MMMM d, yyyy');
-
-  const monthlyData = [
-    { month: 'Jul', investments: 85000, expenses: 52000 },
-    { month: 'Aug', investments: 92000, expenses: 61000 },
-    { month: 'Sep', investments: 78000, expenses: 48000 },
-    { month: 'Oct', investments: 105000, expenses: 72000 },
-    { month: 'Nov', investments: 118000, expenses: 68000 },
-    { month: 'Dec', investments: 125000, expenses: 75000 },
-  ];
-
-  const categoryData = [
-    { name: 'Raw Materials', value: 125000 },
-    { name: 'Labor', value: 85000 },
-    { name: 'Marketing', value: 42000 },
-    { name: 'Packaging', value: 38000 },
-    { name: 'Utilities', value: 28000 },
-    { name: 'Other', value: 22000 },
-  ];
 
   useEffect(() => {
     fetchDashboardData();
@@ -49,40 +48,49 @@ export default function Dashboard() {
     if (!user) return;
 
     try {
+      const sixMonthsAgo = startOfMonth(subMonths(new Date(), 5)).toISOString().split('T')[0];
+
       const [investmentsRes, expensesRes, productsRes, activitiesRes, salesRes] = await Promise.all([
         supabase
           .from('investments')
-          .select('amount')
-          .eq('user_id', user.id),
+          .select('amount, investment_date, status')
+          .eq('status', 'approved'),
         supabase
           .from('expenses')
-          .select('amount')
-          .eq('user_id', user.id),
+          .select('amount, expense_date, category, status')
+          .eq('status', 'approved'),
         supabase
           .from('products')
           .select('id, status')
-          .eq('user_id', user.id)
           .in('status', ['planning', 'testing', 'production']),
         supabase
           .from('activity_log')
           .select('*')
-          .eq('user_id', user.id)
           .order('created_at', { ascending: false })
-          .limit(10),
+          .limit(15),
         supabase
           .from('sales_orders')
           .select('total_amount'),
       ]);
 
-      const totalInvestments = investmentsRes.data?.reduce(
-        (sum, item) => sum + parseFloat(item.amount.toString()),
-        0
-      ) || 0;
+      if (investmentsRes.error) throw investmentsRes.error;
+      if (expensesRes.error) throw expensesRes.error;
+      if (productsRes.error) throw productsRes.error;
+      if (activitiesRes.error) throw activitiesRes.error;
+      if (salesRes.error) throw salesRes.error;
 
-      const totalExpenses = expensesRes.data?.reduce(
+      const investments = investmentsRes.data || [];
+      const expenses = expensesRes.data || [];
+
+      const totalInvestments = investments.reduce(
         (sum, item) => sum + parseFloat(item.amount.toString()),
         0
-      ) || 0;
+      );
+
+      const totalExpenses = expenses.reduce(
+        (sum, item) => sum + parseFloat(item.amount.toString()),
+        0
+      );
 
       const totalSales = salesRes.data?.reduce(
         (sum, item) => sum + parseFloat(item.total_amount.toString()),
@@ -98,6 +106,47 @@ export default function Dashboard() {
       });
 
       setActivities(activitiesRes.data || []);
+
+      const months: { key: string; label: string; investments: number; expenses: number }[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = subMonths(new Date(), i);
+        months.push({
+          key: format(d, 'yyyy-MM'),
+          label: format(d, 'MMM'),
+          investments: 0,
+          expenses: 0,
+        });
+      }
+      const monthMap = new Map(months.map(m => [m.key, m]));
+
+      investments
+        .filter(inv => inv.investment_date >= sixMonthsAgo)
+        .forEach(inv => {
+          const key = inv.investment_date.slice(0, 7);
+          const bucket = monthMap.get(key);
+          if (bucket) bucket.investments += parseFloat(inv.amount.toString());
+        });
+
+      expenses
+        .filter(exp => exp.expense_date >= sixMonthsAgo)
+        .forEach(exp => {
+          const key = exp.expense_date.slice(0, 7);
+          const bucket = monthMap.get(key);
+          if (bucket) bucket.expenses += parseFloat(exp.amount.toString());
+        });
+
+      setMonthlyData(months.map(m => ({ month: m.label, investments: m.investments, expenses: m.expenses })));
+
+      const categoryTotals: Record<string, number> = {};
+      expenses.forEach(exp => {
+        const label = CATEGORY_LABELS[exp.category] || exp.category;
+        categoryTotals[label] = (categoryTotals[label] || 0) + parseFloat(exp.amount.toString());
+      });
+      setCategoryData(
+        Object.entries(categoryTotals)
+          .map(([name, value]) => ({ name, value }))
+          .sort((a, b) => b.value - a.value)
+      );
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -135,7 +184,6 @@ export default function Dashboard() {
             <StatsCard
               title="Total Investments"
               value={`₹${stats.totalInvestments.toLocaleString('en-IN')}`}
-              trend={{ value: 12, label: 'this month' }}
               icon={Leaf}
               iconBgColor="bg-primary/20"
               iconColor="text-primary"
@@ -145,7 +193,6 @@ export default function Dashboard() {
             <StatsCard
               title="Total Expenses"
               value={`₹${stats.totalExpenses.toLocaleString('en-IN')}`}
-              trend={{ value: -8, label: 'vs last month' }}
               icon={Receipt}
               iconBgColor="bg-secondary/20"
               iconColor="text-secondary"
