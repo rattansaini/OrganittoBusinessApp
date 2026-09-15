@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, AlertTriangle, CheckCircle, Clock, FileText, Shield } from 'lucide-react';
-import Header from '../components/Header';
 import AddLicenseModal from '../components/AddLicenseModal';
+import AdminOnly from '../components/AdminOnly';
 import { supabase } from '../lib/supabase';
 import { differenceInDays, format } from 'date-fns';
 
@@ -94,25 +94,23 @@ export default function Compliance() {
   const licenseTypeInfo = (type: string) => LICENSE_TYPES[type as keyof typeof LICENSE_TYPES] || LICENSE_TYPES.other;
 
   return (
-    <div className="min-h-screen bg-cream">
-      <Header />
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="font-heading text-4xl font-bold text-primary mb-2">
-              Compliance & Certifications
-            </h1>
-            <div className="flex items-center gap-4">
-              <p className="text-dark-brown/70">Manage licenses, certifications and inspections</p>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-dark-brown/60">Overall Status:</span>
-                <span className={`font-bold text-lg ${getComplianceColor()}`}>
-                  {getComplianceStatus().icon} {getComplianceStatus().label} ({stats.complianceScore}%)
-                </span>
-              </div>
+    <>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="font-heading text-4xl font-bold text-primary mb-2">
+            Compliance & Certifications
+          </h1>
+          <div className="flex items-center gap-4">
+            <p className="text-dark-brown/70">Manage licenses, certifications and inspections</p>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-dark-brown/60">Overall Status:</span>
+              <span className={`font-bold text-lg ${getComplianceColor()}`}>
+                {getComplianceStatus().icon} {getComplianceStatus().label} ({stats.complianceScore}%)
+              </span>
             </div>
           </div>
+        </div>
+        <AdminOnly>
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-secondary to-accent text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
@@ -120,187 +118,187 @@ export default function Compliance() {
             <Plus className="w-5 h-5" />
             Add License/Certificate
           </button>
-        </div>
+        </AdminOnly>
+      </div>
 
-        {stats.expiringSoon > 0 && (
-          <div className="bg-accent/10 border-2 border-accent/20 rounded-xl p-4 mb-6">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="w-6 h-6 text-accent flex-shrink-0" />
-              <div className="flex-1">
-                <p className="font-semibold text-dark-brown">
-                  {stats.expiringSoon} license{stats.expiringSoon !== 1 ? 's' : ''} expiring in next 90 days - Review required
-                </p>
-                <p className="text-sm text-dark-brown/70 mt-1">
-                  Initiate renewal process to maintain compliance
-                </p>
-              </div>
+      {stats.expiringSoon > 0 && (
+        <div className="bg-accent/10 border-2 border-accent/20 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-6 h-6 text-accent flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-semibold text-dark-brown">
+                {stats.expiringSoon} license{stats.expiringSoon !== 1 ? 's' : ''} expiring in next 90 days - Review required
+              </p>
+              <p className="text-sm text-dark-brown/70 mt-1">
+                Initiate renewal process to maintain compliance
+              </p>
             </div>
-          </div>
-        )}
-
-        {stats.expired > 0 && (
-          <div className="bg-soft-red/10 border-2 border-soft-red/20 rounded-xl p-4 mb-6">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="w-6 h-6 text-soft-red flex-shrink-0" />
-              <div className="flex-1">
-                <p className="font-semibold text-soft-red">
-                  {stats.expired} license{stats.expired !== 1 ? 's have' : ' has'} expired - Immediate action required
-                </p>
-                <p className="text-sm text-dark-brown/70 mt-1">
-                  Operating without valid licenses may result in penalties and business disruption
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-xl shadow-soft p-6">
-            <div className="flex items-center justify-between mb-2">
-              <Shield className="w-8 h-8 text-primary" />
-              <span className="text-3xl font-bold text-primary">{stats.total}</span>
-            </div>
-            <p className="text-sm font-semibold text-dark-brown/70">Total Licenses</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-soft p-6">
-            <div className="flex items-center justify-between mb-2">
-              <CheckCircle className="w-8 h-8 text-sage" />
-              <span className="text-3xl font-bold text-sage">{stats.active}</span>
-            </div>
-            <p className="text-sm font-semibold text-dark-brown/70">Active & Valid</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-soft p-6">
-            <div className="flex items-center justify-between mb-2">
-              <Clock className="w-8 h-8 text-accent" />
-              <span className="text-3xl font-bold text-accent">{stats.expiringSoon}</span>
-            </div>
-            <p className="text-sm font-semibold text-dark-brown/70">Renewal Due Soon</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-soft p-6">
-            <div className="flex items-center justify-between mb-2">
-              <AlertTriangle className="w-8 h-8 text-soft-red" />
-              <span className="text-3xl font-bold text-soft-red">{stats.expired}</span>
-            </div>
-            <p className="text-sm font-semibold text-dark-brown/70">Expired</p>
           </div>
         </div>
+      )}
 
-        {licenses.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {licenses.map(license => {
-              const typeInfo = licenseTypeInfo(license.license_type);
-              const statusBadge = getExpiryStatusBadge(license.expiry_status, license.days_until_expiry);
-              const StatusIcon = statusBadge.icon;
-              const compliancePercentage = license.total_checklist_items > 0
-                ? Math.round((license.completed_checklist_items / license.total_checklist_items) * 100)
-                : 100;
+      {stats.expired > 0 && (
+        <div className="bg-soft-red/10 border-2 border-soft-red/20 rounded-xl p-4 mb-6">
+          <div className="flex items-center gap-3">
+            <AlertTriangle className="w-6 h-6 text-soft-red flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-semibold text-soft-red">
+                {stats.expired} license{stats.expired !== 1 ? 's have' : ' has'} expired - Immediate action required
+              </p>
+              <p className="text-sm text-dark-brown/70 mt-1">
+                Operating without valid licenses may result in penalties and business disruption
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
-              return (
-                <Link
-                  key={license.id}
-                  to={`/compliance/${license.id}`}
-                  className="bg-white rounded-xl shadow-soft hover:shadow-soft-lg transition-all overflow-hidden"
-                >
-                  <div className={`h-2 bg-gradient-to-r ${typeInfo.color}`} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-xl shadow-soft p-6">
+          <div className="flex items-center justify-between mb-2">
+            <Shield className="w-8 h-8 text-primary" />
+            <span className="text-3xl font-bold text-primary">{stats.total}</span>
+          </div>
+          <p className="text-sm font-semibold text-dark-brown/70">Total Licenses</p>
+        </div>
 
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="text-4xl">{typeInfo.icon}</div>
-                        <div>
-                          <h3 className="font-semibold text-dark-brown">{typeInfo.label}</h3>
-                          <p className="text-xs text-dark-brown/60 font-mono">{license.license_number}</p>
-                        </div>
-                      </div>
-                    </div>
+        <div className="bg-white rounded-xl shadow-soft p-6">
+          <div className="flex items-center justify-between mb-2">
+            <CheckCircle className="w-8 h-8 text-sage" />
+            <span className="text-3xl font-bold text-sage">{stats.active}</span>
+          </div>
+          <p className="text-sm font-semibold text-dark-brown/70">Active & Valid</p>
+        </div>
 
-                    <div className="space-y-3 mb-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-dark-brown/60">Issued by:</span>
-                        <span className="text-sm font-semibold text-dark-brown">{license.issuing_authority}</span>
-                      </div>
+        <div className="bg-white rounded-xl shadow-soft p-6">
+          <div className="flex items-center justify-between mb-2">
+            <Clock className="w-8 h-8 text-accent" />
+            <span className="text-3xl font-bold text-accent">{stats.expiringSoon}</span>
+          </div>
+          <p className="text-sm font-semibold text-dark-brown/70">Renewal Due Soon</p>
+        </div>
 
-                      {license.expiry_date && (
-                        <>
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-dark-brown/60">Expiry:</span>
-                            <span className={`text-sm font-semibold ${
-                              license.expiry_status === 'expired' ? 'text-soft-red' :
-                              license.expiry_status === 'critical' ? 'text-soft-red' :
-                              license.expiry_status === 'expiring_soon' ? 'text-accent' :
-                              license.expiry_status === 'renewal_due' ? 'text-amber-500' : 'text-sage'
-                            }`}>
-                              {format(new Date(license.expiry_date), 'MMM dd, yyyy')}
-                            </span>
-                          </div>
+        <div className="bg-white rounded-xl shadow-soft p-6">
+          <div className="flex items-center justify-between mb-2">
+            <AlertTriangle className="w-8 h-8 text-soft-red" />
+            <span className="text-3xl font-bold text-soft-red">{stats.expired}</span>
+          </div>
+          <p className="text-sm font-semibold text-dark-brown/70">Expired</p>
+        </div>
+      </div>
 
-                          {license.days_until_expiry !== null && (
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-dark-brown/60">Days remaining:</span>
-                              <span className={`text-lg font-bold ${
-                                license.days_until_expiry < 0 ? 'text-soft-red' :
-                                license.days_until_expiry <= 7 ? 'text-soft-red' :
-                                license.days_until_expiry <= 30 ? 'text-accent' :
-                                license.days_until_expiry <= 90 ? 'text-amber-500' : 'text-sage'
-                              }`}>
-                                {license.days_until_expiry >= 0 ? license.days_until_expiry : 'Expired'}
-                              </span>
-                            </div>
-                          )}
-                        </>
-                      )}
+      {licenses.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {licenses.map(license => {
+            const typeInfo = licenseTypeInfo(license.license_type);
+            const statusBadge = getExpiryStatusBadge(license.expiry_status, license.days_until_expiry);
+            const StatusIcon = statusBadge.icon;
+            const compliancePercentage = license.total_checklist_items > 0
+              ? Math.round((license.completed_checklist_items / license.total_checklist_items) * 100)
+              : 100;
 
-                      {license.total_checklist_items > 0 && (
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm text-dark-brown/60">Compliance:</span>
-                            <span className="text-sm font-semibold text-dark-brown">{compliancePercentage}%</span>
-                          </div>
-                          <div className="w-full bg-dark-brown/10 rounded-full h-2 overflow-hidden">
-                            <div
-                              className={`h-full transition-all ${
-                                compliancePercentage === 100 ? 'bg-sage' :
-                                compliancePercentage >= 80 ? 'bg-amber-500' : 'bg-soft-red'
-                              }`}
-                              style={{ width: `${compliancePercentage}%` }}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
+            return (
+              <Link
+                key={license.id}
+                to={`/compliance/${license.id}`}
+                className="bg-white rounded-xl shadow-soft hover:shadow-soft-lg transition-all overflow-hidden"
+              >
+                <div className={`h-2 bg-gradient-to-r ${typeInfo.color}`} />
 
-                    <div className="pt-3 border-t border-dark-brown/10">
-                      <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${statusBadge.color}`}>
-                        <StatusIcon className="w-4 h-4" />
-                        <span className="text-sm font-bold">{statusBadge.label}</span>
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="text-4xl">{typeInfo.icon}</div>
+                      <div>
+                        <h3 className="font-semibold text-dark-brown">{typeInfo.label}</h3>
+                        <p className="text-xs text-dark-brown/60 font-mono">{license.license_number}</p>
                       </div>
                     </div>
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl shadow-soft p-12 text-center">
-            <FileText className="w-16 h-16 text-dark-brown/20 mx-auto mb-4" />
-            <h3 className="font-heading text-xl font-bold text-dark-brown/60 mb-2">
-              No licenses recorded yet
-            </h3>
-            <p className="text-dark-brown/40 mb-6">
-              Add your business licenses and certifications to track compliance
-            </p>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
-            >
-              Add First License
-            </button>
-          </div>
-        )}
-      </div>
+
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-dark-brown/60">Issued by:</span>
+                      <span className="text-sm font-semibold text-dark-brown">{license.issuing_authority}</span>
+                    </div>
+
+                    {license.expiry_date && (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-dark-brown/60">Expiry:</span>
+                          <span className={`text-sm font-semibold ${
+                            license.expiry_status === 'expired' ? 'text-soft-red' :
+                            license.expiry_status === 'critical' ? 'text-soft-red' :
+                            license.expiry_status === 'expiring_soon' ? 'text-accent' :
+                            license.expiry_status === 'renewal_due' ? 'text-amber-500' : 'text-sage'
+                          }`}>
+                            {format(new Date(license.expiry_date), 'MMM dd, yyyy')}
+                          </span>
+                        </div>
+
+                        {license.days_until_expiry !== null && (
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-dark-brown/60">Days remaining:</span>
+                            <span className={`text-lg font-bold ${
+                              license.days_until_expiry < 0 ? 'text-soft-red' :
+                              license.days_until_expiry <= 7 ? 'text-soft-red' :
+                              license.days_until_expiry <= 30 ? 'text-accent' :
+                              license.days_until_expiry <= 90 ? 'text-amber-500' : 'text-sage'
+                            }`}>
+                              {license.days_until_expiry >= 0 ? license.days_until_expiry : 'Expired'}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
+
+                    {license.total_checklist_items > 0 && (
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-sm text-dark-brown/60">Compliance:</span>
+                          <span className="text-sm font-semibold text-dark-brown">{compliancePercentage}%</span>
+                        </div>
+                        <div className="w-full bg-dark-brown/10 rounded-full h-2 overflow-hidden">
+                          <div
+                            className={`h-full transition-all ${
+                              compliancePercentage === 100 ? 'bg-sage' :
+                              compliancePercentage >= 80 ? 'bg-amber-500' : 'bg-soft-red'
+                            }`}
+                            style={{ width: `${compliancePercentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-3 border-t border-dark-brown/10">
+                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${statusBadge.color}`}>
+                      <StatusIcon className="w-4 h-4" />
+                      <span className="text-sm font-bold">{statusBadge.label}</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow-soft p-12 text-center">
+          <FileText className="w-16 h-16 text-dark-brown/20 mx-auto mb-4" />
+          <h3 className="font-heading text-xl font-bold text-dark-brown/60 mb-2">
+            No licenses recorded yet
+          </h3>
+          <p className="text-dark-brown/40 mb-6">
+            Add your business licenses and certifications to track compliance
+          </p>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
+          >
+            Add First License
+          </button>
+        </div>
+      )}
 
       {showAddModal && (
         <AddLicenseModal
@@ -311,6 +309,6 @@ export default function Compliance() {
           }}
         />
       )}
-    </div>
+    </>
   );
 }
