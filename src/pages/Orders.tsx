@@ -20,6 +20,7 @@ interface SalesOrder {
   order_number: string;
   customer_name: string | null;
   customer_email: string | null;
+  customer_phone: string | null;
   total_amount: number;
   currency: string;
   financial_status: string | null;
@@ -152,7 +153,12 @@ export default function Orders() {
                           className="border-b border-primary/5 hover:bg-cream/60 cursor-pointer transition-colors"
                         >
                           <td className="px-6 py-4 font-semibold text-primary">{order.order_number}</td>
-                          <td className="px-6 py-4 text-dark-brown">{order.customer_name || '—'}</td>
+                          <td className="px-6 py-4 text-dark-brown">
+                            <div>{order.customer_name || '—'}</div>
+                            {order.customer_phone && (
+                              <div className="text-xs text-dark-brown/50">{order.customer_phone}</div>
+                            )}
+                          </td>
                           <td className="px-6 py-4 text-dark-brown/70">
                             {format(new Date(order.order_date), 'MMM d, yyyy')}
                           </td>
