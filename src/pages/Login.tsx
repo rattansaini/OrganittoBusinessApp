@@ -131,10 +131,7 @@ export default function Login() {
 
           <div className="mt-6 text-center">
             <p className="text-dark-brown/60 text-sm">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-primary font-semibold hover:text-sage transition-colors">
-                Register here
-              </Link>
+              Accounts are added by the Organitto team — contact your admin for access.
             </p>
           </div>
         </div>
