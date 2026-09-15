@@ -61,8 +61,8 @@ export default function Dashboard() {
           .eq('status', 'approved'),
         supabase
           .from('products')
-          .select('id, status')
-          .in('status', ['planning', 'testing', 'production']),
+          .select('id, current_stage')
+          .neq('current_stage', 'launched'),
         supabase
           .from('activity_log')
           .select('*')
