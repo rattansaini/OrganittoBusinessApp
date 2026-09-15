@@ -358,7 +358,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <main className="flex-1 min-w-0 grid gap-4 pt-6 px-[26px] pb-9">{children}</main>
+        <main className="flex-1 min-w-0 grid gap-4 pt-6 px-[26px] pb-9 [&>*]:min-w-0">{children}</main>
       </div>
     </div>
   );
