@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
-import Header from '../components/Header';
 import ChatRoomsList from '../components/chat/ChatRoomsList';
 import ChatMessageArea from '../components/chat/ChatMessageArea';
 import RoomInfo from '../components/chat/RoomInfo';
@@ -65,10 +64,8 @@ export default function Chat() {
   const selectedRoom = rooms.find(r => r.id === selectedRoomId);
 
   return (
-    <div className="min-h-screen bg-cream">
-      <Header />
-
-      <div className="h-[calc(100vh-73px)] flex">
+    <>
+      <div className="h-[calc(100vh-116px)] flex rounded-2xl overflow-hidden border border-edge">
         <div className="w-80 bg-white border-r-2 border-dark-brown/5 flex flex-col">
           <div className="p-4 border-b-2 border-dark-brown/5">
             <div className="flex items-center justify-between mb-4">
@@ -128,6 +125,6 @@ export default function Chat() {
           }}
         />
       )}
-    </div>
+    </>
   );
 }
