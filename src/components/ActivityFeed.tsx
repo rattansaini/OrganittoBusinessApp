@@ -1,4 +1,5 @@
-import { ArrowRight, TrendingDown, TrendingUp, Package, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, ChevronUp, TrendingDown, TrendingUp, Package, FileText } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Activity {
@@ -10,6 +11,7 @@ interface Activity {
 
 interface ActivityFeedProps {
   activities: Activity[];
+  collapsedCount?: number;
 }
 
 const getActivityIcon = (type: string) => {
@@ -25,17 +27,26 @@ const getActivityIcon = (type: string) => {
   }
 };
 
-export default function ActivityFeed({ activities }: ActivityFeedProps) {
+export default function ActivityFeed({ activities, collapsedCount = 2 }: ActivityFeedProps) {
+  const [expanded, setExpanded] = useState(false);
+  const visibleActivities = expanded ? activities : activities.slice(0, collapsedCount);
+  const hasMore = activities.length > collapsedCount;
+
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-all duration-300">
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-heading text-2xl font-bold text-primary">
           Recent Activity
         </h3>
-        <button className="text-sm font-semibold text-primary hover:text-sage transition-colors duration-300 flex items-center gap-1">
-          View All
-          <ArrowRight className="w-4 h-4" />
-        </button>
+        {hasMore && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-sm font-semibold text-primary hover:text-sage transition-colors duration-300 flex items-center gap-1"
+          >
+            {expanded ? 'Show Less' : 'View All'}
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+          </button>
+        )}
       </div>
 
       {activities.length === 0 ? (
@@ -44,7 +55,7 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
         </div>
       ) : (
         <div className="space-y-4">
-          {activities.map((activity) => {
+          {visibleActivities.map((activity) => {
             const { icon: Icon, color, bg } = getActivityIcon(activity.activity_type);
             const timeAgo = formatDistanceToNow(new Date(activity.created_at), { addSuffix: true });
 
