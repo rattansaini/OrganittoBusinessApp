@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Plus, FileText, Download, Trash2, File } from 'lucide-react';
+import { Plus, FileText, Download, Trash2, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface VendorDocumentsTabProps {
   vendorId: string;
@@ -16,8 +17,14 @@ const categories = [
 ];
 
 export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps) {
+  const { user } = useAuth();
   const [documents, setDocuments] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [uploadCategory, setUploadCategory] = useState('contracts');
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetchDocuments();
@@ -52,11 +59,72 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
+  const handleUpload = async () => {
+    if (!file || !user) {
+      alert('Please choose a file to upload.');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${vendorId}/${Date.now()}-${file.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('vendor-documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('vendor-documents').getPublicUrl(filePath);
+
+      const { error: insertError } = await supabase.from('vendor_documents').insert({
+        vendor_id: vendorId,
+        file_name: file.name,
+        category: uploadCategory,
+        file_url: data.publicUrl,
+        file_size: file.size,
+        uploaded_by: user.id,
+      });
+
+      if (insertError) throw insertError;
+
+      await fetchDocuments();
+      setShowUploadModal(false);
+      setFile(null);
+      setUploadCategory('contracts');
+    } catch (error) {
+      console.error('Error uploading document:', error);
+      alert('Failed to upload document. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (docId: string) => {
+    if (!confirm('Delete this document? This cannot be undone.')) return;
+
+    setDeletingId(docId);
+    try {
+      const { error } = await supabase.from('vendor_documents').delete().eq('id', docId);
+      if (error) throw error;
+      await fetchDocuments();
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      alert('Failed to delete document. Please try again.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h3 className="font-heading text-xl font-bold text-primary">Documents</h3>
-        <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+        <button
+          onClick={() => setShowUploadModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
+        >
           <Plus className="w-5 h-5" />
           Upload Document
         </button>
@@ -117,12 +185,25 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-colors">
+                  <a
+                    href={doc.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-colors"
+                  >
                     <Download className="w-4 h-4" />
                     Download
-                  </button>
-                  <button className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4" />
+                  </a>
+                  <button
+                    onClick={() => handleDelete(doc.id)}
+                    disabled={deletingId === doc.id}
+                    className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors disabled:opacity-50"
+                  >
+                    {deletingId === doc.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -140,9 +221,61 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
               ? 'Upload documents to keep vendor information organized'
               : `No ${getCategoryInfo(selectedCategory).label.toLowerCase()} uploaded yet`}
           </p>
-          <button className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
+          >
             Upload Document
           </button>
+        </div>
+      )}
+
+      {showUploadModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-soft-lg max-w-lg w-full p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-heading text-xl font-bold text-primary">Upload Document</h3>
+              <button
+                onClick={() => { setShowUploadModal(false); setFile(null); }}
+                className="p-2 hover:bg-dark-brown/5 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-dark-brown" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-dark-brown mb-2">Category</label>
+                <select
+                  value={uploadCategory}
+                  onChange={(e) => setUploadCategory(e.target.value)}
+                  className="w-full px-4 py-2 border-2 border-dark-brown/10 rounded-lg focus:border-primary focus:outline-none"
+                >
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.icon} {cat.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-dark-brown mb-2">File *</label>
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="w-full px-4 py-2 border-2 border-dark-brown/10 rounded-lg focus:border-primary focus:outline-none"
+                />
+              </div>
+
+              <button
+                onClick={handleUpload}
+                disabled={saving}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all disabled:opacity-50"
+              >
+                {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
+                {saving ? 'Uploading...' : 'Upload'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
