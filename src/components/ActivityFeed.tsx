@@ -17,13 +17,13 @@ interface ActivityFeedProps {
 const getActivityIcon = (type: string) => {
   switch (type) {
     case 'expense':
-      return { icon: TrendingDown, color: 'text-secondary', bg: 'bg-secondary/20' };
+      return { icon: TrendingDown, color: 'text-clay', bg: 'bg-clay/10' };
     case 'investment':
-      return { icon: TrendingUp, color: 'text-primary', bg: 'bg-primary/20' };
+      return { icon: TrendingUp, color: 'text-leaf', bg: 'bg-leaf/10' };
     case 'product':
-      return { icon: Package, color: 'text-accent', bg: 'bg-accent/20' };
+      return { icon: Package, color: 'text-gold', bg: 'bg-gold/10' };
     default:
-      return { icon: FileText, color: 'text-dark-brown', bg: 'bg-dark-brown/20' };
+      return { icon: FileText, color: 'text-ink-2', bg: 'bg-panel-2' };
   }
 };
 
@@ -33,15 +33,13 @@ export default function ActivityFeed({ activities, collapsedCount = 2 }: Activit
   const hasMore = activities.length > collapsedCount;
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-all duration-300">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-heading text-2xl font-bold text-primary">
-          Recent Activity
-        </h3>
+    <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-5 min-w-0">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-title font-semibold text-ink">Recent Activity</h3>
         {hasMore && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-sm font-semibold text-primary hover:text-sage transition-colors duration-300 flex items-center gap-1"
+            className="text-body-sm font-semibold text-leaf hover:text-forest transition-colors flex items-center gap-1"
           >
             {expanded ? 'Show Less' : 'View All'}
             {expanded ? <ChevronUp className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
@@ -51,10 +49,10 @@ export default function ActivityFeed({ activities, collapsedCount = 2 }: Activit
 
       {activities.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-dark-brown/50">No recent activity</p>
+          <p className="text-body-sm text-ink-3">No recent activity</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {visibleActivities.map((activity) => {
             const { icon: Icon, color, bg } = getActivityIcon(activity.activity_type);
             const timeAgo = formatDistanceToNow(new Date(activity.created_at), { addSuffix: true });
@@ -62,16 +60,14 @@ export default function ActivityFeed({ activities, collapsedCount = 2 }: Activit
             return (
               <div
                 key={activity.id}
-                className="flex items-start gap-4 p-4 bg-cream/30 rounded-xl hover:bg-cream/50 transition-all duration-300"
+                className="flex items-start gap-3.5 p-3 rounded-xl hover:bg-panel-2 transition-colors"
               >
-                <div className={`w-10 h-10 ${bg} rounded-full flex items-center justify-center flex-shrink-0`}>
-                  <Icon className={`w-5 h-5 ${color}`} />
+                <div className={`w-9 h-9 ${bg} rounded-full flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`w-4 h-4 ${color}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-dark-brown leading-relaxed mb-1">
-                    {activity.description}
-                  </p>
-                  <p className="text-xs text-dark-brown/50">{timeAgo}</p>
+                  <p className="text-body-sm text-ink leading-relaxed">{activity.description}</p>
+                  <p className="text-[11px] text-ink-3 mt-0.5">{timeAgo}</p>
                 </div>
               </div>
             );

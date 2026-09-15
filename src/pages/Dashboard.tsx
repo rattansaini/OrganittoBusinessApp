@@ -9,6 +9,7 @@ import { CardSkeleton } from '../components/LoadingState';
 import MonthlyDeploymentChart, { MonthlyDeploymentPoint } from '../components/dashboard/MonthlyDeploymentChart';
 import CategoryBreakdown, { CategorySlice } from '../components/dashboard/CategoryBreakdown';
 import VendorActivityTable, { VendorActivityRow } from '../components/dashboard/VendorActivityTable';
+import ActivityFeed from '../components/ActivityFeed';
 
 const CATEGORY_LABELS: Record<string, string> = {
   raw_materials: 'Raw Materials',
@@ -71,6 +72,7 @@ export default function Dashboard() {
   const [categories, setCategories] = useState<CategorySlice[]>([]);
   const [insight, setInsight] = useState<string | null>(null);
   const [vendorRows, setVendorRows] = useState<VendorActivityRow[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
 
   const currentDate = format(new Date(), 'EEEE, MMMM d, yyyy');
 
@@ -84,7 +86,7 @@ export default function Dashboard() {
     try {
       const sixMonthsAgo = startOfMonth(subMonths(new Date(), 5)).toISOString().split('T')[0];
 
-      const [investmentsRes, expensesRes, salesRes, vendorInvoicesRes] = await Promise.all([
+      const [investmentsRes, expensesRes, salesRes, vendorInvoicesRes, activitiesRes] = await Promise.all([
         supabase
           .from('investments')
           .select('amount, status')
@@ -99,12 +101,20 @@ export default function Dashboard() {
         supabase
           .from('vendor_invoices')
           .select('vendor_id, amount, status, vendors(name, category)'),
+        supabase
+          .from('activity_log')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(15),
       ]);
 
       if (investmentsRes.error) throw investmentsRes.error;
       if (expensesRes.error) throw expensesRes.error;
       if (salesRes.error) throw salesRes.error;
       if (vendorInvoicesRes.error) throw vendorInvoicesRes.error;
+      if (activitiesRes.error) throw activitiesRes.error;
+
+      setActivities(activitiesRes.data || []);
 
       const investments = investmentsRes.data || [];
       const expenses = expensesRes.data || [];
@@ -259,7 +269,10 @@ export default function Dashboard() {
             <CategoryBreakdown categories={categories} totalSpend={totalDeployed} insight={insight} />
           </div>
 
-          <VendorActivityTable rows={vendorRows} />
+          <div className="space-y-4">
+            <VendorActivityTable rows={vendorRows} />
+            <ActivityFeed activities={activities} />
+          </div>
         </>
       )}
     </div>
