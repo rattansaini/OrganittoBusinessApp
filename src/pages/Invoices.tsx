@@ -9,12 +9,31 @@ import StatsCard from '../components/StatsCard';
 interface OrderRow {
   id: string;
   order_number: string;
+  channel: string;
   customer_name: string | null;
   customer_phone: string | null;
   shipping_state: string | null;
   total_amount: number;
   order_date: string;
 }
+
+const CHANNEL_LABELS: Record<string, string> = {
+  shopify: 'Website',
+  amazon: 'Amazon',
+  nykaa: 'Nykaa',
+  flipkart: 'Flipkart',
+  myntra: 'Myntra',
+  other: 'Other',
+};
+
+const CHANNEL_COLORS: Record<string, string> = {
+  shopify: 'bg-primary/20 text-primary',
+  amazon: 'bg-accent/20 text-accent',
+  nykaa: 'bg-secondary/20 text-secondary',
+  flipkart: 'bg-sage/20 text-sage',
+  myntra: 'bg-soft-red/20 text-soft-red',
+  other: 'bg-dark-brown/20 text-dark-brown',
+};
 
 interface InvoiceRow {
   order_id: string;
@@ -36,7 +55,7 @@ export default function Invoices() {
     setLoading(true);
     try {
       const [ordersRes, invoicesRes] = await Promise.all([
-        supabase.from('sales_orders').select('id, order_number, customer_name, customer_phone, shipping_state, total_amount, order_date').order('order_date', { ascending: false }),
+        supabase.from('sales_orders').select('id, order_number, channel, customer_name, customer_phone, shipping_state, total_amount, order_date').order('order_date', { ascending: false }),
         supabase.from('invoices').select('order_id, invoice_number'),
       ]);
 
@@ -143,6 +162,7 @@ export default function Invoices() {
                   <thead>
                     <tr className="border-b-2 border-primary/10 text-left">
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Order</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Source</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Customer</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Date</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70 text-right">Amount</th>
@@ -154,6 +174,11 @@ export default function Invoices() {
                     {orders.map((o) => (
                       <tr key={o.id} className="border-b border-primary/5 hover:bg-cream/60 transition-colors">
                         <td className="px-6 py-4 font-semibold text-primary">{o.order_number}</td>
+                        <td className="px-6 py-4">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${CHANNEL_COLORS[o.channel] || 'bg-dark-brown/20 text-dark-brown'}`}>
+                            {CHANNEL_LABELS[o.channel] || o.channel}
+                          </span>
+                        </td>
                         <td className="px-6 py-4 text-dark-brown">
                           <div>{o.customer_name || '—'}</div>
                           {o.customer_phone && <div className="text-xs text-dark-brown/50">{o.customer_phone}</div>}
