@@ -16,6 +16,7 @@ import ExpenseReports from './pages/ExpenseReports';
 import Investments from './pages/Investments';
 import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
+import ProfitLoss from './pages/ProfitLoss';
 import ProductPipeline from './pages/ProductPipeline';
 import ProductDetail from './pages/ProductDetail';
 import CostCalculator from './pages/CostCalculator';
@@ -96,6 +97,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Inventory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profit-loss"
+            element={
+              <ProtectedRoute>
+                <ProfitLoss />
               </ProtectedRoute>
             }
           />
