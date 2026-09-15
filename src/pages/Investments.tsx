@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Plus, Users, TrendingUp, BarChart3, List, Edit2, Trash2, CheckCircle, XCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
+import { useConfirm } from '../contexts/ConfirmContext';
 import { supabase } from '../lib/supabase';
-import Header from '../components/Header';
 import AddInvestmentModal from '../components/AddInvestmentModal';
 import InvestmentCard from '../components/InvestmentCard';
 import InvestmentHistory from '../components/InvestmentHistory';
 import InvestmentStatistics from '../components/InvestmentStatistics';
 import ApprovalModal from '../components/ApprovalModal';
+import { CardSkeleton } from '../components/LoadingState';
 import { format } from 'date-fns';
 
 interface Investment {
@@ -40,6 +42,8 @@ type ViewTab = 'by_partner' | 'all_investments' | 'statistics';
 
 export default function Investments() {
   const { user } = useAuth();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<ViewTab>('by_partner');
@@ -136,14 +140,17 @@ export default function Investments() {
       setSelectedInvestment(null);
     } catch (error) {
       console.error('Error processing approval:', error);
-      alert('Failed to process approval. Please try again.');
+      toast.error('Failed to process approval. Please try again.');
     } finally {
       setProcessingId(null);
     }
   };
 
   const handleDelete = async (investmentId: string) => {
-    if (!confirm('Are you sure you want to delete this investment? This action cannot be undone.')) {
+    const confirmed = await confirm({
+      message: 'Are you sure you want to delete this investment? This action cannot be undone.',
+    });
+    if (!confirmed) {
       return;
     }
 
@@ -157,7 +164,7 @@ export default function Investments() {
       await fetchInvestments();
     } catch (error) {
       console.error('Error deleting investment:', error);
-      alert('Failed to delete investment. Please try again.');
+      toast.error('Failed to delete investment. Please try again.');
     }
   };
 
@@ -219,240 +226,227 @@ export default function Investments() {
   };
 
   return (
-    <div className="min-h-screen bg-cream relative overflow-hidden">
-      <div
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232D5016' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
-
-      <Header />
-
-      <div className="relative z-10 container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
-            <div>
-              <h2 className="font-heading text-5xl font-bold text-primary mb-2">
-                Investment Tracker
-              </h2>
-              <p className="text-dark-brown/70 text-lg">
-                Track partner investments and grow together
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setSelectedPartnerId(undefined);
-                setShowAddModal(true);
-              }}
-              className="flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-105"
-            >
-              <Plus className="w-5 h-5" />
-              Add Investment
-            </button>
+    <>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
+          <div>
+            <h2 className="font-heading text-5xl font-bold text-primary mb-2">
+              Investment Tracker
+            </h2>
+            <p className="text-dark-brown/70 text-lg">
+              Track partner investments and grow together
+            </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 border-2 border-accent/30 shadow-soft">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-accent" />
-                </div>
-                <span className="text-sm font-semibold text-accent uppercase tracking-wide">Total</span>
-              </div>
-              <p className="text-4xl font-bold text-accent mb-1">
-                ₹{totalInvestment.toLocaleString('en-IN')}
-              </p>
-              <p className="text-sm text-dark-brown/60">Total Amount Invested</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-sage/10 to-sage/5 rounded-xl p-6 border-2 border-sage/30 shadow-soft">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="w-12 h-12 bg-sage/20 rounded-lg flex items-center justify-center">
-                  <Users className="w-6 h-6 text-sage" />
-                </div>
-                <span className="text-sm font-semibold text-sage uppercase tracking-wide">Partners</span>
-              </div>
-              <p className="text-4xl font-bold text-sage mb-1">{uniquePartners}</p>
-              <p className="text-sm text-dark-brown/60">Partners Invested</p>
-            </div>
-
-            <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-6 border-2 border-secondary/30 shadow-soft">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="w-6 h-6 text-secondary" />
-                </div>
-                <span className="text-sm font-semibold text-secondary uppercase tracking-wide">Average</span>
-              </div>
-              <p className="text-4xl font-bold text-secondary mb-1">
-                ₹{avgPerPartner.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-              </p>
-              <p className="text-sm text-dark-brown/60">Per Partner</p>
-            </div>
-          </div>
-
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-2 mb-6 inline-flex gap-2">
-            <button
-              onClick={() => setActiveTab('by_partner')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === 'by_partner'
-                  ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
-                  : 'text-dark-brown hover:bg-accent/10'
-              }`}
-            >
-              <Users className="w-5 h-5" />
-              By Partner
-            </button>
-            <button
-              onClick={() => setActiveTab('all_investments')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === 'all_investments'
-                  ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
-                  : 'text-dark-brown hover:bg-accent/10'
-              }`}
-            >
-              <List className="w-5 h-5" />
-              All Investments
-            </button>
-            <button
-              onClick={() => setActiveTab('statistics')}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === 'statistics'
-                  ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
-                  : 'text-dark-brown hover:bg-accent/10'
-              }`}
-            >
-              <BarChart3 className="w-5 h-5" />
-              Statistics
-            </button>
-          </div>
-
-          {loading ? (
-            <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
-              <p className="text-dark-brown/50">Loading investments...</p>
-            </div>
-          ) : activeTab === 'by_partner' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {partnerInvestments.length === 0 ? (
-                <div className="col-span-full text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
-                  <p className="text-dark-brown/50 mb-4">No investments recorded yet</p>
-                  <button
-                    onClick={() => setShowAddModal(true)}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Add First Investment
-                  </button>
-                </div>
-              ) : (
-                partnerInvestments.map((partnerInv) => (
-                  <InvestmentCard
-                    key={partnerInv.partner.id}
-                    partner={partnerInv.partner}
-                    investments={partnerInv.investments}
-                    totalInvestment={partnerInv.total}
-                    percentageOfTotal={(partnerInv.total / totalInvestment) * 100}
-                    isTopInvestor={partnerInv.partner.id === topInvestorId}
-                    onViewAll={() => {
-                      setSelectedPartner(partnerInv);
-                      setShowHistory(true);
-                    }}
-                    onAddInvestment={() => {
-                      setSelectedPartnerId(partnerInv.partner.id);
-                      setShowAddModal(true);
-                    }}
-                  />
-                ))
-              )}
-            </div>
-          ) : activeTab === 'all_investments' ? (
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-cream/50 border-b-2 border-accent/10">
-                    <tr>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Date</th>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Partner</th>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Amount</th>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Purpose</th>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Status</th>
-                      <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Added By</th>
-                      {isAdmin && <th className="px-4 py-4 text-right text-sm font-semibold text-dark-brown">Actions</th>}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {investments.map((investment, index) => (
-                      <tr
-                        key={investment.id}
-                        className={`border-b border-dark-brown/5 hover:bg-cream/30 transition-colors ${
-                          index % 2 === 0 ? 'bg-white' : 'bg-cream/20'
-                        }`}
-                      >
-                        <td className="px-4 py-4 text-sm text-dark-brown">
-                          {format(new Date(investment.investment_date), 'MMM d, yyyy')}
-                        </td>
-                        <td className="px-4 py-4">
-                          <p className="text-sm font-semibold text-dark-brown">{investment.users?.name}</p>
-                          <p className="text-xs text-dark-brown/50">{investment.users?.email}</p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <p className="text-lg font-bold text-accent">
-                            ₹{investment.amount.toLocaleString('en-IN')}
-                          </p>
-                        </td>
-                        <td className="px-4 py-4">
-                          <p className="text-sm font-medium text-dark-brown">{investment.purpose}</p>
-                          {investment.notes && (
-                            <p className="text-xs text-dark-brown/50 mt-1 line-clamp-1">{investment.notes}</p>
-                          )}
-                        </td>
-                        <td className="px-4 py-4">{getStatusBadge(investment.status)}</td>
-                        <td className="px-4 py-4 text-sm text-dark-brown">
-                          {investment.users_submitted_by?.name || 'Unknown'}
-                        </td>
-                        {isAdmin && (
-                          <td className="px-4 py-4">
-                            <div className="flex items-center justify-end gap-2">
-                              {investment.status === 'pending' && (
-                                <>
-                                  <button
-                                    onClick={() => handleApprove(investment)}
-                                    disabled={processingId === investment.id}
-                                    className="p-2 hover:bg-sage/10 rounded-lg transition-colors disabled:opacity-50"
-                                    title="Approve"
-                                  >
-                                    <CheckCircle className="w-4 h-4 text-sage" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleReject(investment)}
-                                    disabled={processingId === investment.id}
-                                    className="p-2 hover:bg-soft-red/10 rounded-lg transition-colors disabled:opacity-50"
-                                    title="Reject"
-                                  >
-                                    <XCircle className="w-4 h-4 text-soft-red" />
-                                  </button>
-                                </>
-                              )}
-                              <button
-                                onClick={() => handleDelete(investment.id)}
-                                className="p-2 hover:bg-soft-red/10 rounded-lg transition-colors"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4 text-soft-red" />
-                              </button>
-                            </div>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : (
-            <InvestmentStatistics investments={investments} />
-          )}
+          <button
+            onClick={() => {
+              setSelectedPartnerId(undefined);
+              setShowAddModal(true);
+            }}
+            className="flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-105"
+          >
+            <Plus className="w-5 h-5" />
+            Add Investment
+          </button>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-6 border-2 border-accent/30 shadow-soft">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-accent" />
+              </div>
+              <span className="text-sm font-semibold text-accent uppercase tracking-wide">Total</span>
+            </div>
+            <p className="text-4xl font-bold text-accent mb-1">
+              ₹{totalInvestment.toLocaleString('en-IN')}
+            </p>
+            <p className="text-sm text-dark-brown/60">Total Amount Invested</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-sage/10 to-sage/5 rounded-xl p-6 border-2 border-sage/30 shadow-soft">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 bg-sage/20 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-sage" />
+              </div>
+              <span className="text-sm font-semibold text-sage uppercase tracking-wide">Partners</span>
+            </div>
+            <p className="text-4xl font-bold text-sage mb-1">{uniquePartners}</p>
+            <p className="text-sm text-dark-brown/60">Partners Invested</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-xl p-6 border-2 border-secondary/30 shadow-soft">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-secondary" />
+              </div>
+              <span className="text-sm font-semibold text-secondary uppercase tracking-wide">Average</span>
+            </div>
+            <p className="text-4xl font-bold text-secondary mb-1">
+              ₹{avgPerPartner.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+            </p>
+            <p className="text-sm text-dark-brown/60">Per Partner</p>
+          </div>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-2 mb-6 inline-flex gap-2">
+          <button
+            onClick={() => setActiveTab('by_partner')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === 'by_partner'
+                ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
+                : 'text-dark-brown hover:bg-accent/10'
+            }`}
+          >
+            <Users className="w-5 h-5" />
+            By Partner
+          </button>
+          <button
+            onClick={() => setActiveTab('all_investments')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === 'all_investments'
+                ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
+                : 'text-dark-brown hover:bg-accent/10'
+            }`}
+          >
+            <List className="w-5 h-5" />
+            All Investments
+          </button>
+          <button
+            onClick={() => setActiveTab('statistics')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === 'statistics'
+                ? 'bg-gradient-to-r from-accent to-secondary text-white shadow-soft'
+                : 'text-dark-brown hover:bg-accent/10'
+            }`}
+          >
+            <BarChart3 className="w-5 h-5" />
+            Statistics
+          </button>
+        </div>
+
+        {loading ? (
+          <CardSkeleton count={4} />
+        ) : activeTab === 'by_partner' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {partnerInvestments.length === 0 ? (
+              <div className="col-span-full text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
+                <p className="text-dark-brown/50 mb-4">No investments recorded yet</p>
+                <button
+                  onClick={() => setShowAddModal(true)}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add First Investment
+                </button>
+              </div>
+            ) : (
+              partnerInvestments.map((partnerInv) => (
+                <InvestmentCard
+                  key={partnerInv.partner.id}
+                  partner={partnerInv.partner}
+                  investments={partnerInv.investments}
+                  totalInvestment={partnerInv.total}
+                  percentageOfTotal={(partnerInv.total / totalInvestment) * 100}
+                  isTopInvestor={partnerInv.partner.id === topInvestorId}
+                  onViewAll={() => {
+                    setSelectedPartner(partnerInv);
+                    setShowHistory(true);
+                  }}
+                  onAddInvestment={() => {
+                    setSelectedPartnerId(partnerInv.partner.id);
+                    setShowAddModal(true);
+                  }}
+                />
+              ))
+            )}
+          </div>
+        ) : activeTab === 'all_investments' ? (
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-cream/50 border-b-2 border-accent/10">
+                  <tr>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Date</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Partner</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Amount</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Purpose</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Status</th>
+                    <th className="px-4 py-4 text-left text-sm font-semibold text-dark-brown">Added By</th>
+                    {isAdmin && <th className="px-4 py-4 text-right text-sm font-semibold text-dark-brown">Actions</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {investments.map((investment, index) => (
+                    <tr
+                      key={investment.id}
+                      className={`border-b border-dark-brown/5 hover:bg-cream/30 transition-colors ${
+                        index % 2 === 0 ? 'bg-white' : 'bg-cream/20'
+                      }`}
+                    >
+                      <td className="px-4 py-4 text-sm text-dark-brown">
+                        {format(new Date(investment.investment_date), 'MMM d, yyyy')}
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="text-sm font-semibold text-dark-brown">{investment.users?.name}</p>
+                        <p className="text-xs text-dark-brown/50">{investment.users?.email}</p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="text-lg font-bold text-accent">
+                          ₹{investment.amount.toLocaleString('en-IN')}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="text-sm font-medium text-dark-brown">{investment.purpose}</p>
+                        {investment.notes && (
+                          <p className="text-xs text-dark-brown/50 mt-1 line-clamp-1">{investment.notes}</p>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">{getStatusBadge(investment.status)}</td>
+                      <td className="px-4 py-4 text-sm text-dark-brown">
+                        {investment.users_submitted_by?.name || 'Unknown'}
+                      </td>
+                      {isAdmin && (
+                        <td className="px-4 py-4">
+                          <div className="flex items-center justify-end gap-2">
+                            {investment.status === 'pending' && (
+                              <>
+                                <button
+                                  onClick={() => handleApprove(investment)}
+                                  disabled={processingId === investment.id}
+                                  className="p-2 hover:bg-sage/10 rounded-lg transition-colors disabled:opacity-50"
+                                  title="Approve"
+                                >
+                                  <CheckCircle className="w-4 h-4 text-sage" />
+                                </button>
+                                <button
+                                  onClick={() => handleReject(investment)}
+                                  disabled={processingId === investment.id}
+                                  className="p-2 hover:bg-soft-red/10 rounded-lg transition-colors disabled:opacity-50"
+                                  title="Reject"
+                                >
+                                  <XCircle className="w-4 h-4 text-soft-red" />
+                                </button>
+                              </>
+                            )}
+                            <button
+                              onClick={() => handleDelete(investment.id)}
+                              className="p-2 hover:bg-soft-red/10 rounded-lg transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4 text-soft-red" />
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          <InvestmentStatistics investments={investments} />
+        )}
       </div>
 
       {showAddModal && (
@@ -498,6 +492,6 @@ export default function Investments() {
           loading={processingId === selectedInvestment.id}
         />
       )}
-    </div>
+    </>
   );
 }
