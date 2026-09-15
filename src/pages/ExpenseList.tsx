@@ -372,7 +372,7 @@ export default function ExpenseList() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-soft p-4 text-center">
+            <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-4 text-center">
               <p className="text-sm text-dark-brown/60 mb-1">This Month</p>
               <p className="text-2xl font-bold text-secondary">
                 ₹{currentMonthTotal.toLocaleString('en-IN')}
@@ -388,7 +388,7 @@ export default function ExpenseList() {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 mb-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 mb-6">
           <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
             {(['all', 'pending', 'approved', 'rejected', 'my_expenses'] as FilterTab[]).map(tab => (
               <button
@@ -532,11 +532,11 @@ export default function ExpenseList() {
         </div>
 
         {loading ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg overflow-hidden">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e2 overflow-hidden">
             <TableSkeleton rows={8} columns={6} />
           </div>
         ) : filteredExpenses.length === 0 ? (
-          <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
+          <div className="text-center py-12 bg-panel border border-edge rounded-2xl shadow-e1">
             <p className="text-dark-brown/50 mb-4">No expenses found</p>
             <button
               onClick={() => navigate('/expenses/add')}
@@ -548,7 +548,7 @@ export default function ExpenseList() {
           </div>
         ) : (
           <>
-            <div className="hidden lg:block bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft overflow-hidden">
+            <div className="hidden lg:block bg-panel border border-edge rounded-2xl shadow-e1 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-cream/50 border-b-2 border-primary/10">
@@ -764,7 +764,7 @@ export default function ExpenseList() {
               {paginatedExpenses.map((expense) => (
                 <div
                   key={expense.id}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl shadow-soft p-4 hover:shadow-soft-lg transition-all"
+                  className="bg-panel border border-edge rounded-2xl shadow-e1 p-4 hover:shadow-e2 transition-all"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
@@ -860,7 +860,7 @@ export default function ExpenseList() {
               ))}
             </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-soft p-4 mt-6">
+            <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-4 mt-6">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-dark-brown/70">Items per page:</span>

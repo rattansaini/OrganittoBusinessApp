@@ -288,7 +288,7 @@ export default function Investments() {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-2 mb-6 inline-flex gap-2">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-2 mb-6 inline-flex gap-2">
           <button
             onClick={() => setActiveTab('by_partner')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
@@ -329,7 +329,7 @@ export default function Investments() {
         ) : activeTab === 'by_partner' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {partnerInvestments.length === 0 ? (
-              <div className="col-span-full text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
+              <div className="col-span-full text-center py-12 bg-panel border border-edge rounded-2xl shadow-e1">
                 <p className="text-dark-brown/50 mb-4">No investments recorded yet</p>
                 <button
                   onClick={() => setShowAddModal(true)}
@@ -361,7 +361,7 @@ export default function Investments() {
             )}
           </div>
         ) : activeTab === 'all_investments' ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft overflow-hidden">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e1 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-cream/50 border-b-2 border-accent/10">

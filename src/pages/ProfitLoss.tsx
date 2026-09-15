@@ -174,7 +174,7 @@ export default function ProfitLoss() {
         />
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 mb-8">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 mb-8">
         <h3 className="font-heading text-2xl font-bold text-primary mb-6">Monthly Revenue vs Expenses</h3>
         {loading ? (
           <ChartSkeleton height={320} />
@@ -210,7 +210,7 @@ export default function ProfitLoss() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-6">Expenses by Category</h3>
           {categoryData.length === 0 ? (
             <div className="py-12 text-center text-dark-brown/60">No approved expenses yet.</div>
@@ -248,7 +248,7 @@ export default function ProfitLoss() {
           )}
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 overflow-hidden">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 overflow-hidden">
           <h3 className="font-heading text-2xl font-bold text-primary mb-6">Month-by-Month Breakdown</h3>
           {monthlyData.length === 0 ? (
             <div className="py-12 text-center text-dark-brown/60">No data yet.</div>

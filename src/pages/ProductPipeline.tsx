@@ -229,7 +229,7 @@ export default function ProductPipeline() {
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-4 mb-8 flex flex-wrap gap-4 items-center justify-between">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-4 mb-8 flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-2">
             <button
               onClick={() => setView('board')}
@@ -324,7 +324,7 @@ export default function ProductPipeline() {
             </div>
           </div>
         ) : (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft overflow-hidden">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e1 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-cream/50 border-b-2 border-accent/10">
@@ -411,7 +411,7 @@ export default function ProductPipeline() {
         )}
 
         {filteredProducts.length === 0 && !loading && (
-          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft">
+          <div className="text-center py-16 bg-panel border border-edge rounded-2xl shadow-e1">
             <span className="text-6xl mb-4 block">🌱</span>
             <h3 className="font-heading text-2xl font-bold text-primary mb-2">
               No products yet!

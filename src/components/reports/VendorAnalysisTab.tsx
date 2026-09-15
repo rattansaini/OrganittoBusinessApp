@@ -167,7 +167,7 @@ export default function VendorAnalysisTab({ expenses, vendors }: VendorAnalysisT
       </div>
 
       {topVendorsData.length > 0 && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-4">
             Top 10 Vendors by Spending
           </h3>

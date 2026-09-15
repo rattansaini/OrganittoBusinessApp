@@ -170,7 +170,7 @@ export default function OverviewTab({ expenses, investments, vendors }: Overview
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-dark-brown/10 shadow-soft">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <div className="flex items-center gap-3 mb-3">
             <span className="text-3xl">{topCategory ? getCategoryIcon(topCategory[0]) : '📊'}</span>
             <Tag className="w-5 h-5 text-accent" />
@@ -184,7 +184,7 @@ export default function OverviewTab({ expenses, investments, vendors }: Overview
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-dark-brown/10 shadow-soft">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-gradient-to-br from-accent to-secondary rounded-full flex items-center justify-center text-white font-bold">
               {topPartner ? topPartner.name.charAt(0) : '?'}
@@ -200,7 +200,7 @@ export default function OverviewTab({ expenses, investments, vendors }: Overview
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-dark-brown/10 shadow-soft">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center">
               <CreditCard className="w-5 h-5 text-accent" />
@@ -212,7 +212,7 @@ export default function OverviewTab({ expenses, investments, vendors }: Overview
           </p>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border-2 border-dark-brown/10 shadow-soft">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center">
               <Clock className="w-5 h-5 text-accent" />
@@ -223,7 +223,7 @@ export default function OverviewTab({ expenses, investments, vendors }: Overview
         </div>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
         <h3 className="font-heading text-2xl font-bold text-primary mb-4">
           Investment vs Expense Trend (12 Months)
         </h3>

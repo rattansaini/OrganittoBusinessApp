@@ -96,7 +96,7 @@ export default function InvestmentCard({
           </div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border-2 border-accent/20">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-4">
           <p className="text-sm text-dark-brown/60 mb-1">Total Investment</p>
           <p className="text-3xl font-bold text-accent mb-2">
             ₹{totalInvestment.toLocaleString('en-IN')}

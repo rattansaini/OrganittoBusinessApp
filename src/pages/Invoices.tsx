@@ -141,7 +141,7 @@ export default function Invoices() {
         />
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg overflow-hidden">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e2 overflow-hidden">
         {loading ? (
           <TableSkeleton rows={6} columns={5} />
         ) : orders.length === 0 ? (

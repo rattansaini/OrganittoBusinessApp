@@ -147,7 +147,7 @@ export default function InvestmentStatistics({ investments }: InvestmentStatisti
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-4">
             Partner Contributions
           </h3>
@@ -180,7 +180,7 @@ export default function InvestmentStatistics({ investments }: InvestmentStatisti
           )}
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-4">
             Investment by Purpose
           </h3>
@@ -211,7 +211,7 @@ export default function InvestmentStatistics({ investments }: InvestmentStatisti
         </div>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
         <h3 className="font-heading text-2xl font-bold text-primary mb-4">
           Investment Timeline
         </h3>

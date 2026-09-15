@@ -82,7 +82,7 @@ export default function ExpenseReports() {
         </p>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-2 mb-8 inline-flex gap-2 flex-wrap">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-2 mb-8 inline-flex gap-2 flex-wrap">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
@@ -103,7 +103,7 @@ export default function ExpenseReports() {
       </div>
 
       {loading ? (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <ChartSkeleton height={280} />
         </div>
       ) : (

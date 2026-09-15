@@ -241,7 +241,7 @@ export default function AddExpense() {
         </div>
       )}
 
-      <form className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 md:p-8">
+      <form className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 md:p-8">
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-dark-brown mb-2">

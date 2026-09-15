@@ -93,7 +93,7 @@ export default function Register() {
     return (
       <div className="min-h-screen bg-cream relative overflow-hidden flex items-center justify-center p-4">
         <div className="relative z-10 w-full max-w-md">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg p-8 md:p-10 text-center">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e2 p-8 md:p-10 text-center">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-sage blur-xl opacity-30 rounded-full"></div>
@@ -136,7 +136,7 @@ export default function Register() {
       </button>
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg p-8 md:p-10">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e2 p-8 md:p-10">
           <div className="flex items-center justify-center mb-8">
             <img
               src="/organitto-logo.png"

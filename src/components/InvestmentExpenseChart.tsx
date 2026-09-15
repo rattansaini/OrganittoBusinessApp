@@ -32,7 +32,7 @@ export default function InvestmentExpenseChart({ data }: InvestmentExpenseChartP
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-all duration-300">
+    <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 hover:shadow-e2 transition-all duration-300">
       <h3 className="font-heading text-2xl font-bold text-primary mb-6">
         Investment vs Expense Trend
       </h3>

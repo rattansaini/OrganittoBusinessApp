@@ -179,7 +179,7 @@ export default function AdSpend() {
       )}
 
       {showAddForm && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg p-6 mb-8 border-2 border-primary/10">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e2 p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-heading text-xl font-bold text-primary">Log Ad Spend</h3>
             <button onClick={() => setShowAddForm(false)} className="text-dark-brown/60 hover:text-dark-brown">
@@ -236,7 +236,7 @@ export default function AdSpend() {
         </div>
       )}
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft-lg overflow-hidden">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e2 overflow-hidden">
         {loading ? (
           <TableSkeleton rows={6} columns={5} />
         ) : rows.length === 0 ? (

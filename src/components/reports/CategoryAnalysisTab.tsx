@@ -209,7 +209,7 @@ export default function CategoryAnalysisTab({ expenses }: CategoryAnalysisTabPro
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-4">
             Category Distribution
           </h3>
@@ -248,7 +248,7 @@ export default function CategoryAnalysisTab({ expenses }: CategoryAnalysisTabPro
           )}
         </div>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <h3 className="font-heading text-2xl font-bold text-primary mb-4">
             Category Comparison
           </h3>
@@ -280,7 +280,7 @@ export default function CategoryAnalysisTab({ expenses }: CategoryAnalysisTabPro
       </div>
 
       {selectedCategoryData && (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+        <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-heading text-2xl font-bold text-primary flex items-center gap-3">
               <span className="text-3xl">{getCategoryIcon(selectedCategoryData.category)}</span>

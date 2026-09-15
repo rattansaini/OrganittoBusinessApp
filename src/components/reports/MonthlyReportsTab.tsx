@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, subMonths } from 'date-fns';
 import { Download, FileText, Mail, TrendingUp, TrendingDown } from 'lucide-react';
+import { useToast } from '../../contexts/ToastContext';
 
 interface MonthlyReportsTabProps {
   expenses: any[];
@@ -8,6 +9,7 @@ interface MonthlyReportsTabProps {
 }
 
 export default function MonthlyReportsTab({ expenses, investments }: MonthlyReportsTabProps) {
+  const toast = useToast();
   const [selectedMonth, setSelectedMonth] = useState(format(new Date(), 'yyyy-MM'));
   const [compareWithLast, setCompareWithLast] = useState(true);
 
@@ -114,15 +116,15 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
   }
 
   const handleDownloadPDF = () => {
-    alert('PDF generation feature coming soon!');
+    toast.info('PDF generation feature coming soon!');
   };
 
   const handleDownloadExcel = () => {
-    alert('Excel export feature coming soon!');
+    toast.info('Excel export feature coming soon!');
   };
 
   const handleEmailReport = () => {
-    alert('Email report feature coming soon!');
+    toast.info('Email report feature coming soon!');
   };
 
   return (
@@ -168,7 +170,7 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
             <p className="text-sm text-dark-brown/60 mb-2">Total Investments</p>
             <p className="text-3xl font-bold text-sage mb-2">
               ₹{totalInvestments.toLocaleString('en-IN')}
@@ -185,7 +187,7 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
             )}
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6">
+          <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
             <p className="text-sm text-dark-brown/60 mb-2">Total Expenses</p>
             <p className="text-3xl font-bold text-secondary mb-2">
               ₹{totalExpenses.toLocaleString('en-IN')}
@@ -202,7 +204,7 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
             )}
           </div>
 
-          <div className={`bg-white/80 backdrop-blur-sm rounded-xl p-6 ${
+          <div className={`bg-panel border border-edge rounded-2xl shadow-e1 p-6 ${
             netChange >= 0 ? 'ring-2 ring-accent' : 'ring-2 ring-soft-red'
           }`}>
             <p className="text-sm text-dark-brown/60 mb-2">Net Change</p>
@@ -225,7 +227,7 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
         </div>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
         <h3 className="font-heading text-2xl font-bold text-primary mb-4">
           Category Breakdown
         </h3>
@@ -300,7 +302,7 @@ export default function MonthlyReportsTab({ expenses, investments }: MonthlyRepo
         </div>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-soft p-6">
+      <div className="bg-panel border border-edge rounded-2xl shadow-e1 p-6">
         <h3 className="font-heading text-2xl font-bold text-primary mb-4">
           Detailed Daily Breakdown
         </h3>
