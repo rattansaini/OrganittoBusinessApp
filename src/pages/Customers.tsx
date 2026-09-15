@@ -48,7 +48,7 @@ export default function Customers() {
   };
 
   const addCustomer = async () => {
-    if (!newCustomer.name.trim()) return;
+    if (!newCustomer.name.trim() || !newCustomer.phone.trim()) return;
     setSaving(true);
     try {
       const { error } = await supabase.from('customers').insert({
@@ -147,23 +147,23 @@ export default function Customers() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input
                   type="text"
-                  placeholder="Name"
+                  placeholder="Name *"
                   value={newCustomer.name}
                   onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
                   className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
                 />
                 <input
-                  type="email"
-                  placeholder="Email"
-                  value={newCustomer.email}
-                  onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                  type="text"
+                  placeholder="Phone *"
+                  value={newCustomer.phone}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
                   className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
                 />
                 <input
-                  type="text"
-                  placeholder="Phone"
-                  value={newCustomer.phone}
-                  onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                  type="email"
+                  placeholder="Email (optional)"
+                  value={newCustomer.email}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
                   className="px-4 py-2.5 rounded-xl border-2 border-primary/10 focus:border-primary/30 focus:outline-none bg-white"
                 />
                 <input
@@ -190,7 +190,7 @@ export default function Customers() {
               </div>
               <button
                 onClick={addCustomer}
-                disabled={saving || !newCustomer.name.trim()}
+                disabled={saving || !newCustomer.name.trim() || !newCustomer.phone.trim()}
                 className="mt-4 flex items-center gap-2 px-5 py-2.5 bg-primary text-cream rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
@@ -220,7 +220,8 @@ export default function Customers() {
                   <thead>
                     <tr className="border-b-2 border-primary/10 text-left">
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Name</th>
-                      <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Contact</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Phone</th>
+                      <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Email</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70">Location</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70 text-right">Orders</th>
                       <th className="px-6 py-4 text-sm font-semibold text-dark-brown/70 text-right">Total Spent</th>
@@ -231,10 +232,8 @@ export default function Customers() {
                     {filtered.map((c) => (
                       <tr key={c.id} className="border-b border-primary/5 hover:bg-cream/60 transition-colors">
                         <td className="px-6 py-4 font-semibold text-dark-brown">{c.name}</td>
-                        <td className="px-6 py-4 text-dark-brown/70 text-sm">
-                          <div>{c.email || '—'}</div>
-                          {c.phone && <div>{c.phone}</div>}
-                        </td>
+                        <td className="px-6 py-4 text-dark-brown font-medium">{c.phone || '—'}</td>
+                        <td className="px-6 py-4 text-dark-brown/70 text-sm">{c.email || '—'}</td>
                         <td className="px-6 py-4 text-dark-brown/70">
                           {[c.city, c.state].filter(Boolean).join(', ') || '—'}
                         </td>
