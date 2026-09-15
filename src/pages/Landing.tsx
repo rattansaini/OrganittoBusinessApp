@@ -18,9 +18,9 @@ export default function Landing() {
           <div className="text-center max-w-3xl mx-auto">
             <div className="flex items-center justify-center mb-12">
               <img
-                src="/whatsapp_image_2025-10-29_at_11.28.27.jpeg"
+                src="/organitto-logo.png"
                 alt="Organitto - The Organic Choice"
-                className="h-24 md:h-32 w-auto object-contain drop-shadow-2xl logo-transparent"
+                className="h-24 md:h-32 w-auto object-contain drop-shadow-2xl"
               />
             </div>
 
