@@ -10,6 +10,8 @@ interface OrderRow {
   id: string;
   order_number: string;
   customer_name: string | null;
+  customer_phone: string | null;
+  shipping_state: string | null;
   total_amount: number;
   order_date: string;
 }
@@ -34,7 +36,7 @@ export default function Invoices() {
     setLoading(true);
     try {
       const [ordersRes, invoicesRes] = await Promise.all([
-        supabase.from('sales_orders').select('id, order_number, customer_name, total_amount, order_date').order('order_date', { ascending: false }),
+        supabase.from('sales_orders').select('id, order_number, customer_name, customer_phone, shipping_state, total_amount, order_date').order('order_date', { ascending: false }),
         supabase.from('invoices').select('order_id, invoice_number'),
       ]);
 
@@ -64,11 +66,13 @@ export default function Invoices() {
       if (!settings) throw new Error('Business settings not found');
 
       const invoiceNumber = `${settings.invoice_prefix}-${String(settings.next_invoice_number).padStart(4, '0')}`;
+      const order = orders.find((o) => o.id === orderId);
+      const billingState = order?.shipping_state || settings.state;
 
       const { error: insertError } = await supabase.from('invoices').insert({
         order_id: orderId,
         invoice_number: invoiceNumber,
-        billing_state: settings.state,
+        billing_state: billingState,
         gst_rate: settings.default_gst_rate,
       });
 
@@ -150,7 +154,10 @@ export default function Invoices() {
                     {orders.map((o) => (
                       <tr key={o.id} className="border-b border-primary/5 hover:bg-cream/60 transition-colors">
                         <td className="px-6 py-4 font-semibold text-primary">{o.order_number}</td>
-                        <td className="px-6 py-4 text-dark-brown">{o.customer_name || '—'}</td>
+                        <td className="px-6 py-4 text-dark-brown">
+                          <div>{o.customer_name || '—'}</div>
+                          {o.customer_phone && <div className="text-xs text-dark-brown/50">{o.customer_phone}</div>}
+                        </td>
                         <td className="px-6 py-4 text-dark-brown/70">{format(new Date(o.order_date), 'MMM d, yyyy')}</td>
                         <td className="px-6 py-4 text-right font-semibold text-dark-brown">
                           ₹{Number(o.total_amount).toLocaleString('en-IN')}
@@ -184,8 +191,8 @@ export default function Invoices() {
 
           <p className="text-sm text-dark-brown/50 mt-6">
             GST is calculated assuming Shopify order totals are inclusive of tax, split as CGST + SGST when the
-            customer's state matches Organitto's registered state, or IGST otherwise. Billing state defaults to
-            Haryana — correct it on a specific invoice if the customer is elsewhere.
+            customer's shipping state matches Organitto's registered state (Haryana), or IGST otherwise. The
+            customer's actual shipping state from Shopify is used automatically when available.
           </p>
         </div>
       </div>
