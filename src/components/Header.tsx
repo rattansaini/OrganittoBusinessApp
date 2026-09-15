@@ -61,8 +61,7 @@ export default function Header() {
                 {link.submenu ? (
                   <>
                     <button
-                      onMouseEnter={() => setShowFinanceMenu(true)}
-                      onMouseLeave={() => setShowFinanceMenu(false)}
+                      onClick={() => setShowFinanceMenu(!showFinanceMenu)}
                       className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-1 ${
                         isFinanceActive()
                           ? 'bg-primary text-cream shadow-soft'
@@ -73,25 +72,30 @@ export default function Header() {
                       <ChevronDown className="w-4 h-4" />
                     </button>
                     {showFinanceMenu && (
-                      <div
-                        onMouseEnter={() => setShowFinanceMenu(true)}
-                        onMouseLeave={() => setShowFinanceMenu(false)}
-                        className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl shadow-soft-lg border-2 border-primary/10 overflow-hidden z-50"
-                      >
-                        {link.submenu.map((sublink) => (
-                          <Link
-                            key={sublink.path}
-                            to={sublink.path}
-                            className={`block px-4 py-3 text-sm font-medium transition-all duration-300 ${
-                              isActive(sublink.path)
-                                ? 'bg-primary/10 text-primary'
-                                : 'text-dark-brown hover:bg-primary/10 hover:text-primary'
-                            }`}
-                          >
-                            {sublink.name}
-                          </Link>
-                        ))}
-                      </div>
+                      <>
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setShowFinanceMenu(false)}
+                        />
+                        <div className="absolute top-full left-0 pt-2 w-48 z-50">
+                          <div className="bg-white rounded-xl shadow-soft-lg border-2 border-primary/10 overflow-hidden">
+                            {link.submenu.map((sublink) => (
+                              <Link
+                                key={sublink.path}
+                                to={sublink.path}
+                                onClick={() => setShowFinanceMenu(false)}
+                                className={`block px-4 py-3 text-sm font-medium transition-all duration-300 ${
+                                  isActive(sublink.path)
+                                    ? 'bg-primary/10 text-primary'
+                                    : 'text-dark-brown hover:bg-primary/10 hover:text-primary'
+                                }`}
+                              >
+                                {sublink.name}
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      </>
                     )}
                   </>
                 ) : (
