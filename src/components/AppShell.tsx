@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Leaf,
@@ -12,6 +12,7 @@ import {
   Landmark,
   Building2,
   FileText,
+  FileCheck,
   Package,
   ShoppingBag,
   Boxes,
@@ -19,6 +20,11 @@ import {
   ShieldCheck,
   MessageSquare,
   AlertTriangle,
+  FlaskConical,
+  Sprout,
+  TrendingUp,
+  Loader2,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -80,6 +86,15 @@ interface UninvoicedOrder {
   total_amount: number;
 }
 
+interface SearchResult {
+  id: string;
+  label: string;
+  sub?: string;
+  group: string;
+  icon: typeof Building2;
+  path: string;
+}
+
 interface NavCounts {
   expenses: number;
   investments: number;
@@ -97,11 +112,139 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const [uninvoicedOrders, setUninvoicedOrders] = useState<UninvoicedOrder[]>([]);
   const [counts, setCounts] = useState<NavCounts>({ expenses: 0, investments: 0, vendors: 0 });
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (!user) return;
     fetchNotifications();
     fetchNavCounts();
   }, [user]);
+
+  useEffect(() => {
+    const query = searchQuery.trim();
+    if (query.length < 2) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
+    setSearchLoading(true);
+    const timeout = setTimeout(() => runSearch(query), 300);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      } else if (e.key === 'Escape') {
+        searchInputRef.current?.blur();
+        setShowSearchResults(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const runSearch = async (query: string) => {
+    const sanitized = query.replace(/[,()%_]/g, ' ').trim();
+    if (!sanitized) {
+      setSearchResults([]);
+      setSearchLoading(false);
+      return;
+    }
+    const like = `%${sanitized}%`;
+
+    try {
+      const [vendors, products, batches, ingredients, licenses, customers, investments, orders] =
+        await Promise.all([
+          supabase.from('vendors').select('id, name, category').ilike('name', like).limit(5),
+          supabase.from('products').select('id, name').ilike('name', like).limit(5),
+          supabase.from('batches').select('id, batch_number').ilike('batch_number', like).limit(5),
+          supabase
+            .from('ingredient_inventory_summary')
+            .select('id, common_name')
+            .ilike('common_name', like)
+            .limit(5),
+          supabase
+            .from('license_summary')
+            .select('id, license_number, license_type')
+            .or(`license_number.ilike.${like},license_type.ilike.${like}`)
+            .limit(5),
+          supabase.from('customers').select('id, name').ilike('name', like).limit(5),
+          supabase.from('investments').select('id, purpose').ilike('purpose', like).limit(5),
+          supabase
+            .from('sales_orders')
+            .select('id, order_number, customer_name')
+            .or(`order_number.ilike.${like},customer_name.ilike.${like}`)
+            .limit(5),
+        ]);
+
+      const results: SearchResult[] = [];
+      (vendors.data || []).forEach((r) =>
+        results.push({ id: r.id, label: r.name, sub: r.category, group: 'Vendors', icon: Building2, path: `/vendors/${r.id}` })
+      );
+      (products.data || []).forEach((r) =>
+        results.push({ id: r.id, label: r.name, group: 'Products', icon: Package, path: `/products/${r.id}` })
+      );
+      (batches.data || []).forEach((r) =>
+        results.push({ id: r.id, label: r.batch_number, group: 'Batches', icon: FlaskConical, path: `/batches/${r.id}` })
+      );
+      (ingredients.data || []).forEach((r) =>
+        results.push({
+          id: r.id,
+          label: r.common_name,
+          group: 'Ingredients',
+          icon: Sprout,
+          path: `/ingredients/${r.id}`,
+        })
+      );
+      (licenses.data || []).forEach((r) =>
+        results.push({
+          id: r.id,
+          label: r.license_number,
+          sub: r.license_type,
+          group: 'Licenses',
+          icon: FileCheck,
+          path: `/compliance/${r.id}`,
+        })
+      );
+      (customers.data || []).forEach((r) =>
+        results.push({ id: r.id, label: r.name, group: 'Customers', icon: Users, path: '/customers' })
+      );
+      (investments.data || []).forEach((r) =>
+        results.push({ id: r.id, label: r.purpose, group: 'Investments', icon: TrendingUp, path: '/investments' })
+      );
+      (orders.data || []).forEach((r) =>
+        results.push({
+          id: r.id,
+          label: r.order_number,
+          sub: r.customer_name || undefined,
+          group: 'Orders',
+          icon: ShoppingBag,
+          path: '/orders',
+        })
+      );
+
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Error running global search:', error);
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
+  const handleSelectResult = (path: string) => {
+    navigate(path);
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowSearchResults(false);
+  };
 
   const fetchNotifications = async () => {
     try {
@@ -279,18 +422,88 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <div className="flex-1 min-w-0 flex flex-col">
         <div className="sticky top-0 z-30 bg-ground/85 backdrop-blur-md border-b border-edge">
           <div className="flex items-center justify-between gap-4 h-14 px-[26px]">
-            <div className="flex items-center gap-2 bg-panel border border-edge rounded-[10px] px-3 h-9 w-full max-w-[400px]">
-              <Search className="w-[15px] h-[15px] text-ink-3 flex-shrink-0" />
-              <input
-                type="text"
-                placeholder="Search..."
-                disabled
-                className="flex-1 min-w-0 bg-transparent text-body-sm text-ink placeholder:text-ink-3 outline-none disabled:cursor-default"
-              />
-              {/* TODO: wire up search */}
-              <kbd className="max-[599px]:hidden flex-shrink-0 text-[10px] font-semibold text-ink-3 border border-edge rounded px-1.5 py-0.5">
-                &#8984;K
-              </kbd>
+            <div className="relative w-full max-w-[400px]">
+              <div className="flex items-center gap-2 bg-panel border border-edge rounded-[10px] px-3 h-9 w-full">
+                {searchLoading ? (
+                  <Loader2 className="w-[15px] h-[15px] text-ink-3 flex-shrink-0 animate-spin" />
+                ) : (
+                  <Search className="w-[15px] h-[15px] text-ink-3 flex-shrink-0" />
+                )}
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSearchResults(true);
+                  }}
+                  onFocus={() => setShowSearchResults(true)}
+                  className="flex-1 min-w-0 bg-transparent text-body-sm text-ink placeholder:text-ink-3 outline-none"
+                />
+                {searchQuery ? (
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setSearchResults([]);
+                      searchInputRef.current?.focus();
+                    }}
+                    className="flex-shrink-0 text-ink-3 hover:text-ink transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <kbd className="max-[599px]:hidden flex-shrink-0 text-[10px] font-semibold text-ink-3 border border-edge rounded px-1.5 py-0.5">
+                    &#8984;K
+                  </kbd>
+                )}
+              </div>
+
+              {showSearchResults && searchQuery.trim().length >= 2 && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowSearchResults(false)} />
+                  <div className="absolute left-0 right-0 mt-2 max-h-[70vh] overflow-y-auto bg-panel rounded-xl shadow-e2 border border-edge z-50">
+                    {searchLoading && searchResults.length === 0 ? (
+                      <p className="px-4 py-6 text-center text-body-sm text-ink-3">Searching...</p>
+                    ) : searchResults.length === 0 ? (
+                      <p className="px-4 py-6 text-center text-body-sm text-ink-3">
+                        No results for "{searchQuery.trim()}"
+                      </p>
+                    ) : (
+                      Object.entries(
+                        searchResults.reduce<Record<string, SearchResult[]>>((groups, result) => {
+                          (groups[result.group] ||= []).push(result);
+                          return groups;
+                        }, {})
+                      ).map(([group, items]) => (
+                        <div key={group} className="border-b border-edge last:border-b-0">
+                          <p className="px-4 pt-3 pb-1 text-[10.5px] font-semibold tracking-[.1em] uppercase text-ink-3">
+                            {group}
+                          </p>
+                          {items.map((result) => {
+                            const Icon = result.icon;
+                            return (
+                              <button
+                                key={`${result.group}-${result.id}`}
+                                onClick={() => handleSelectResult(result.path)}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-panel-2 transition-colors"
+                              >
+                                <Icon className="w-4 h-4 text-ink-3 flex-shrink-0" />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block text-body-sm text-ink truncate">{result.label}</span>
+                                  {result.sub && (
+                                    <span className="block text-[11px] text-ink-3 truncate">{result.sub}</span>
+                                  )}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="relative flex-shrink-0">
