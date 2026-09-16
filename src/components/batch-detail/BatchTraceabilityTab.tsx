@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Activity, Clock } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
+import { PageLoader } from '../LoadingState';
 
 interface BatchTraceabilityTabProps {
   batchId: string;
@@ -55,12 +56,7 @@ export default function BatchTraceabilityTab({ batchId }: BatchTraceabilityTabPr
   };
 
   if (loading) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-dark-brown/60">Loading activity log...</p>
-      </div>
-    );
+    return <PageLoader label="Loading activity log..." />;
   }
 
   return (

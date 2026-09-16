@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { ConfirmProvider } from './contexts/ConfirmContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import OfflineBanner from './components/OfflineBanner';
@@ -37,218 +39,222 @@ import Settings from './pages/Settings';
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <OfflineBanner />
-        <PWAInstallPrompt />
-        <UpdateNotification />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/expenses/add"
-            element={
-              <ProtectedRoute>
-                <AddExpense />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <ProtectedRoute>
-                <ExpenseList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/expenses/reports"
-            element={
-              <ProtectedRoute>
-                <ExpenseReports />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/investments"
-            element={
-              <ProtectedRoute>
-                <Investments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              <ProtectedRoute>
-                <Orders />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/inventory"
-            element={
-              <ProtectedRoute>
-                <Inventory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profit-loss"
-            element={
-              <ProtectedRoute>
-                <ProfitLoss />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/customers"
-            element={
-              <ProtectedRoute>
-                <Customers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ad-spend"
-            element={
-              <ProtectedRoute>
-                <AdSpend />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/invoices"
-            element={
-              <ProtectedRoute>
-                <Invoices />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/invoices/:orderId"
-            element={
-              <ProtectedRoute>
-                <InvoiceDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products"
-            element={
-              <ProtectedRoute>
-                <ProductPipeline />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/products/:id"
-            element={
-              <ProtectedRoute>
-                <ProductDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/calculator"
-            element={
-              <ProtectedRoute>
-                <CostCalculator />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/vendors"
-            element={
-              <ProtectedRoute>
-                <Vendors />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/vendors/:id"
-            element={
-              <ProtectedRoute>
-                <VendorDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/batches"
-            element={
-              <ProtectedRoute>
-                <Batches />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/batches/:id"
-            element={
-              <ProtectedRoute>
-                <BatchDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ingredients"
-            element={
-              <ProtectedRoute>
-                <Ingredients />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ingredients/:id"
-            element={
-              <ProtectedRoute>
-                <IngredientDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/compliance"
-            element={
-              <ProtectedRoute>
-                <Compliance />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/compliance/:id"
-            element={
-              <ProtectedRoute>
-                <LicenseDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <ProtectedRoute>
-                <Chat />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AuthProvider>
+      <ToastProvider>
+        <ConfirmProvider>
+          <AuthProvider>
+            <OfflineBanner />
+            <PWAInstallPrompt />
+            <UpdateNotification />
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expenses/add"
+                element={
+                  <ProtectedRoute>
+                    <AddExpense />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expenses"
+                element={
+                  <ProtectedRoute>
+                    <ExpenseList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/expenses/reports"
+                element={
+                  <ProtectedRoute>
+                    <ExpenseReports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/investments"
+                element={
+                  <ProtectedRoute>
+                    <Investments />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/orders"
+                element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <ProtectedRoute>
+                    <Inventory />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profit-loss"
+                element={
+                  <ProtectedRoute>
+                    <ProfitLoss />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customers"
+                element={
+                  <ProtectedRoute>
+                    <Customers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ad-spend"
+                element={
+                  <ProtectedRoute>
+                    <AdSpend />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/invoices"
+                element={
+                  <ProtectedRoute>
+                    <Invoices />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/invoices/:orderId"
+                element={
+                  <ProtectedRoute>
+                    <InvoiceDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/products"
+                element={
+                  <ProtectedRoute>
+                    <ProductPipeline />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/products/:id"
+                element={
+                  <ProtectedRoute>
+                    <ProductDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/calculator"
+                element={
+                  <ProtectedRoute>
+                    <CostCalculator />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vendors"
+                element={
+                  <ProtectedRoute>
+                    <Vendors />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/vendors/:id"
+                element={
+                  <ProtectedRoute>
+                    <VendorDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/batches"
+                element={
+                  <ProtectedRoute>
+                    <Batches />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/batches/:id"
+                element={
+                  <ProtectedRoute>
+                    <BatchDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ingredients"
+                element={
+                  <ProtectedRoute>
+                    <Ingredients />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ingredients/:id"
+                element={
+                  <ProtectedRoute>
+                    <IngredientDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/compliance"
+                element={
+                  <ProtectedRoute>
+                    <Compliance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/compliance/:id"
+                element={
+                  <ProtectedRoute>
+                    <LicenseDetail />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/chat"
+                element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AuthProvider>
+        </ConfirmProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

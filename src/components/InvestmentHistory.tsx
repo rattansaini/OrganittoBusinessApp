@@ -1,5 +1,6 @@
 import { X, Download, Eye, FileText } from 'lucide-react';
 import { format } from 'date-fns';
+import { useToast } from '../contexts/ToastContext';
 
 interface Investment {
   id: string;
@@ -30,6 +31,8 @@ export default function InvestmentHistory({
   partner,
   investments,
 }: InvestmentHistoryProps) {
+  const toast = useToast();
+
   if (!isOpen) return null;
 
   const totalInvestment = investments.reduce((sum, inv) => sum + inv.amount, 0);
@@ -60,7 +63,7 @@ export default function InvestmentHistory({
   };
 
   const handleDownloadStatement = () => {
-    alert('PDF generation feature coming soon!');
+    toast.info('PDF generation feature coming soon!');
   };
 
   return (

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FileText, Upload, Edit, CheckCircle, Clock, Eye } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
+import { PageLoader } from '../LoadingState';
 
 interface LicenseAuditLogTabProps {
   licenseId: string;
@@ -111,12 +112,7 @@ export default function LicenseAuditLogTab({ licenseId }: LicenseAuditLogTabProp
   };
 
   if (loading) {
-    return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-dark-brown/60">Loading audit log...</p>
-      </div>
-    );
+    return <PageLoader label="Loading audit log..." />;
   }
 
   return (

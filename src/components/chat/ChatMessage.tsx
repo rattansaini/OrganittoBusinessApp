@@ -3,6 +3,7 @@ import { Edit, Trash2, MoreVertical, ThumbsUp, Heart, Check } from 'lucide-react
 import { format } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useConfirm } from '../../contexts/ConfirmContext';
 
 interface ChatMessageProps {
   message: any;
@@ -15,12 +16,13 @@ const QUICK_REACTIONS = ['👍', '❤️', '😂', '🎉', '🔥'];
 
 export default function ChatMessage({ message, isOwnMessage, onDelete, onEdit }: ChatMessageProps) {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const [showActions, setShowActions] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.message_text);
 
   const handleDelete = async () => {
-    if (!confirm('Delete this message?')) return;
+    if (!(await confirm({ message: 'Delete this message?' }))) return;
 
     try {
       const { error } = await supabase
