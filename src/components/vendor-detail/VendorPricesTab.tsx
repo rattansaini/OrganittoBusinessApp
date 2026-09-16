@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, TrendingUp, Package, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import AdminOnly from '../AdminOnly';
 
 interface VendorPricesTabProps {
   vendorId: string;
@@ -32,10 +33,12 @@ export default function VendorPricesTab({ vendorId }: VendorPricesTabProps) {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h3 className="font-heading text-xl font-bold text-primary">Price List</h3>
-        <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
-          <Plus className="w-5 h-5" />
-          Add Price Item
-        </button>
+        <AdminOnly>
+          <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
+            <Plus className="w-5 h-5" />
+            Add Price Item
+          </button>
+        </AdminOnly>
       </div>
 
       {prices.length > 0 ? (
@@ -97,12 +100,14 @@ export default function VendorPricesTab({ vendorId }: VendorPricesTabProps) {
                         <button className="p-2 hover:bg-primary/10 text-primary rounded-lg transition-colors">
                           <TrendingUp className="w-4 h-4" />
                         </button>
-                        <button className="p-2 hover:bg-accent/10 text-accent rounded-lg transition-colors">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <AdminOnly>
+                          <button className="p-2 hover:bg-accent/10 text-accent rounded-lg transition-colors">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </AdminOnly>
                       </div>
                     </td>
                   </tr>
@@ -118,7 +123,7 @@ export default function VendorPricesTab({ vendorId }: VendorPricesTabProps) {
             No price items found
           </h3>
           <p className="text-dark-brown/40 mb-4">Add price items to track vendor pricing</p>
-          <button className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+          <button className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
             Add Price Item
           </button>
         </div>

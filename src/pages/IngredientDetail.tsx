@@ -198,7 +198,7 @@ export default function IngredientDetail() {
 
           <AdminOnly>
             <div className="flex items-center gap-3 flex-wrap">
-              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+              <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
                 <Plus className="w-4 h-4" />
                 Add Stock
               </button>

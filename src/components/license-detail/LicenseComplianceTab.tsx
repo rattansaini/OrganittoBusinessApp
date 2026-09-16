@@ -3,6 +3,7 @@ import { CheckCircle, Circle, Plus, Upload } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import { useAuth } from '../../contexts/AuthContext';
+import AdminOnly from '../AdminOnly';
 
 interface LicenseComplianceTabProps {
   licenseId: string;
@@ -176,13 +177,15 @@ export default function LicenseComplianceTab({ licenseId, license, onUpdate }: L
 
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-lg font-bold text-primary">Compliance Requirements</h3>
-        <button
-          onClick={() => setShowAddItem(!showAddItem)}
-          className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg font-semibold hover:bg-primary/20 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Add Item
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowAddItem(!showAddItem)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg font-semibold hover:bg-primary/20 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Item
+          </button>
+        </AdminOnly>
       </div>
 
       {showAddItem && (
@@ -230,16 +233,27 @@ export default function LicenseComplianceTab({ licenseId, license, onUpdate }: L
             }`}
           >
             <div className="flex items-start gap-4">
-              <button
-                onClick={() => toggleChecklistItem(item.id, item.completed)}
-                className="flex-shrink-0 mt-1"
-              >
-                {item.completed ? (
-                  <CheckCircle className="w-6 h-6 text-sage" />
-                ) : (
-                  <Circle className="w-6 h-6 text-dark-brown/30 hover:text-primary transition-colors" />
-                )}
-              </button>
+              <AdminOnly>
+                <button
+                  onClick={() => toggleChecklistItem(item.id, item.completed)}
+                  className="flex-shrink-0 mt-1"
+                >
+                  {item.completed ? (
+                    <CheckCircle className="w-6 h-6 text-sage" />
+                  ) : (
+                    <Circle className="w-6 h-6 text-dark-brown/30 hover:text-primary transition-colors" />
+                  )}
+                </button>
+              </AdminOnly>
+              {user?.role !== 'admin' && (
+                <div className="flex-shrink-0 mt-1">
+                  {item.completed ? (
+                    <CheckCircle className="w-6 h-6 text-sage" />
+                  ) : (
+                    <Circle className="w-6 h-6 text-dark-brown/30" />
+                  )}
+                </div>
+              )}
 
               <div className="flex-1">
                 <p className={`font-semibold ${
@@ -279,12 +293,14 @@ export default function LicenseComplianceTab({ licenseId, license, onUpdate }: L
           <p className="text-dark-brown/40 mb-4">
             Add compliance requirements specific to this license
           </p>
-          <button
-            onClick={() => setShowAddItem(true)}
-            className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
-          >
-            Add First Requirement
-          </button>
+          <AdminOnly>
+            <button
+              onClick={() => setShowAddItem(true)}
+              className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+            >
+              Add First Requirement
+            </button>
+          </AdminOnly>
         </div>
       )}
 

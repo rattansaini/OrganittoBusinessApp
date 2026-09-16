@@ -3,6 +3,7 @@ import { Plus, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { format } from 'date-fns';
+import AdminOnly from '../AdminOnly';
 
 interface TestingTabProps {
   productId: string;
@@ -160,22 +161,24 @@ export default function TestingTab({ productId }: TestingTabProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-2xl font-bold text-primary">Testing & Quality Control</h3>
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowTestModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-accent to-secondary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-          >
-            <Plus className="w-5 h-5" />
-            Add Test
-          </button>
-          <button
-            onClick={() => setShowBatchModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sage to-primary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-          >
-            <Plus className="w-5 h-5" />
-            Add Sample Batch
-          </button>
-        </div>
+        <AdminOnly>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowTestModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+            >
+              <Plus className="w-5 h-5" />
+              Add Test
+            </button>
+            <button
+              onClick={() => setShowBatchModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sage to-primary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
+            >
+              <Plus className="w-5 h-5" />
+              Add Sample Batch
+            </button>
+          </div>
+        </AdminOnly>
       </div>
 
       <div className="space-y-6">
@@ -419,7 +422,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:shadow-soft-lg transition-all"
+                  className="flex-1 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
                 >
                   Add Test
                 </button>

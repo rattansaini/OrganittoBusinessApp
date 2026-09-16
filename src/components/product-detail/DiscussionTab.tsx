@@ -170,7 +170,7 @@ export default function DiscussionTab({ productId }: DiscussionTabProps) {
               <button
                 type="submit"
                 disabled={!commentText.trim()}
-                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-accent to-secondary text-white rounded-xl font-semibold hover:shadow-soft transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-6 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 <Send className="w-5 h-5" />
                 Send

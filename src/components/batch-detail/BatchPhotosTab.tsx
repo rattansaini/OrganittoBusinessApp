@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import AdminOnly from '../AdminOnly';
 
 interface BatchPhotosTabProps {
   batchId: string;
@@ -74,10 +75,12 @@ export default function BatchPhotosTab({ batchId }: BatchPhotosTabProps) {
           })}
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
-          <Plus className="w-4 h-4" />
-          Upload Photos
-        </button>
+        <AdminOnly>
+          <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
+            <Plus className="w-4 h-4" />
+            Upload Photos
+          </button>
+        </AdminOnly>
       </div>
 
       {filteredPhotos.length > 0 ? (
@@ -119,7 +122,7 @@ export default function BatchPhotosTab({ batchId }: BatchPhotosTabProps) {
               ? 'Upload photos to document this batch'
               : `No ${categories.find(c => c.id === selectedCategory)?.label.toLowerCase()} uploaded yet`}
           </p>
-          <button className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+          <button className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
             Upload First Photo
           </button>
         </div>

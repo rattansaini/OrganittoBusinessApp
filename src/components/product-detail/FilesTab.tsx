@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Upload, File, Image, FileText, Download, Trash2, FolderOpen } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useConfirm } from '../../contexts/ConfirmContext';
+import AdminOnly from '../AdminOnly';
 import { format } from 'date-fns';
 
 interface FilesTabProps {
@@ -21,6 +23,7 @@ const categories = [
 
 export default function FilesTab({ productId }: FilesTabProps) {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const [files, setFiles] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -88,7 +91,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
   };
 
   const handleDelete = async (fileId: string) => {
-    if (!confirm('Are you sure you want to delete this file?')) return;
+    if (!(await confirm({ message: 'Are you sure you want to delete this file?' }))) return;
 
     try {
       const { error } = await supabase
@@ -139,13 +142,15 @@ export default function FilesTab({ productId }: FilesTabProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-2xl font-bold text-primary">Files & Documents</h3>
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-accent to-secondary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-        >
-          <Upload className="w-5 h-5" />
-          Upload File
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+          >
+            <Upload className="w-5 h-5" />
+            Upload File
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -218,12 +223,14 @@ export default function FilesTab({ productId }: FilesTabProps) {
                   <Download className="w-4 h-4" />
                   Download
                 </a>
-                <button
-                  onClick={() => handleDelete(file.id)}
-                  className="px-3 py-2 bg-soft-red/10 hover:bg-soft-red/20 text-soft-red rounded-lg transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <AdminOnly>
+                  <button
+                    onClick={() => handleDelete(file.id)}
+                    className="px-3 py-2 bg-soft-red/10 hover:bg-soft-red/20 text-soft-red rounded-lg transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </AdminOnly>
               </div>
             </div>
           ))}
@@ -236,12 +243,14 @@ export default function FilesTab({ productId }: FilesTabProps) {
               ? `No files in ${selectedCategory} yet`
               : 'No files uploaded yet'}
           </p>
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:shadow-soft transition-all"
-          >
-            Upload Your First File
-          </button>
+          <AdminOnly>
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+            >
+              Upload Your First File
+            </button>
+          </AdminOnly>
         </div>
       )}
 
@@ -328,7 +337,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:shadow-soft-lg transition-all"
+                  className="flex-1 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
                 >
                   Upload File
                 </button>

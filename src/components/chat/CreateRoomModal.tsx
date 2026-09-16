@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 
 interface CreateRoomModalProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ const EMOJI_OPTIONS = ['💬', '💡', '📝', '🎯', '🚀', '⚡', '🌟', '�
 
 export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -30,7 +32,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      alert('Please enter a room name');
+      toast.error('Please enter a room name');
       return;
     }
 
@@ -68,7 +70,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
       onSuccess();
     } catch (error) {
       console.error('Error creating room:', error);
-      alert('Error creating room. Please try again.');
+      toast.error('Error creating room. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -173,7 +175,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-sage text-white font-semibold rounded-xl hover:shadow-soft-lg transition-all disabled:opacity-50"
+            className="flex-1 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
           >
             {loading ? 'Creating...' : 'Create Room'}
           </button>

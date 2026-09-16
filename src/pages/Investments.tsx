@@ -242,7 +242,7 @@ export default function Investments() {
               setSelectedPartnerId(undefined);
               setShowAddModal(true);
             }}
-            className="flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-105"
+            className="flex items-center gap-2 px-6 py-4 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
           >
             <Plus className="w-5 h-5" />
             Add Investment
@@ -333,7 +333,7 @@ export default function Investments() {
                 <p className="text-dark-brown/50 mb-4">No investments recorded yet</p>
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent to-secondary text-white font-semibold rounded-xl hover:scale-105 transition-all duration-300"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
                 >
                   <Plus className="w-5 h-5" />
                   Add First Investment

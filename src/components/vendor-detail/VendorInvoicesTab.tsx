@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Plus, FileText, AlertCircle, CheckCircle, Clock, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
+import AdminOnly from '../AdminOnly';
 
 interface VendorInvoicesTabProps {
   vendorId: string;
@@ -9,6 +11,7 @@ interface VendorInvoicesTabProps {
 
 export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [invoices, setInvoices] = useState<any[]>([]);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -84,7 +87,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
   const handleSubmit = async () => {
     if (!user) return;
     if (!formData.invoice_number || !formData.amount) {
-      alert('Please fill in invoice number and amount.');
+      toast.error('Please fill in invoice number and amount.');
       return;
     }
 
@@ -121,7 +124,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
       resetForm();
     } catch (error) {
       console.error('Error uploading invoice:', error);
-      alert('Failed to upload invoice. Please try again.');
+      toast.error('Failed to upload invoice. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -143,7 +146,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
       await fetchInvoices();
     } catch (error) {
       console.error('Error marking invoice as paid:', error);
-      alert('Failed to update invoice. Please try again.');
+      toast.error('Failed to update invoice. Please try again.');
     } finally {
       setMarkingPaidId(null);
     }
@@ -153,13 +156,15 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h3 className="font-heading text-xl font-bold text-primary">Invoice Management</h3>
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Upload Invoice
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+          >
+            <Plus className="w-5 h-5" />
+            Upload Invoice
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -246,13 +251,15 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
                   </div>
 
                   {invoice.status !== 'paid' && (
-                    <button
-                      onClick={() => handleMarkPaid(invoice.id, parseFloat(invoice.amount))}
-                      disabled={markingPaidId === invoice.id}
-                      className="px-4 py-2 bg-sage/10 hover:bg-sage/20 text-sage rounded-lg font-semibold transition-colors disabled:opacity-50"
-                    >
-                      {markingPaidId === invoice.id ? 'Updating...' : 'Mark as Paid'}
-                    </button>
+                    <AdminOnly>
+                      <button
+                        onClick={() => handleMarkPaid(invoice.id, parseFloat(invoice.amount))}
+                        disabled={markingPaidId === invoice.id}
+                        className="px-4 py-2 bg-sage/10 hover:bg-sage/20 text-sage rounded-lg font-semibold transition-colors disabled:opacity-50"
+                      >
+                        {markingPaidId === invoice.id ? 'Updating...' : 'Mark as Paid'}
+                      </button>
+                    </AdminOnly>
                   )}
                 </div>
               </div>
@@ -274,12 +281,14 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
               No invoices found
             </h3>
             <p className="text-dark-brown/40 mb-4">Upload your first invoice to get started</p>
-            <button
-              onClick={() => setShowUploadModal(true)}
-              className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
-            >
-              Upload Invoice
-            </button>
+            <AdminOnly>
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+              >
+                Upload Invoice
+              </button>
+            </AdminOnly>
           </div>
         )}
       </div>
@@ -378,7 +387,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
               <button
                 onClick={handleSubmit}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
               >
                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
                 {saving ? 'Uploading...' : 'Save Invoice'}

@@ -191,7 +191,7 @@ export default function Invoices() {
                           <button
                             onClick={() => generateInvoice(o.id)}
                             disabled={generatingId === o.id}
-                            className="px-3 py-1.5 bg-primary text-cream rounded-lg text-sm font-medium hover:bg-primary/90 transition-all duration-300 disabled:opacity-50"
+                            className="px-3 py-1.5 rounded-lg text-sm text-white font-medium bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
                           >
                             {generatingId === o.id ? 'Generating...' : 'Generate Invoice'}
                           </button>

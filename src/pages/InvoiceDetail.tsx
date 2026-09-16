@@ -106,7 +106,7 @@ export default function InvoiceDetail() {
         </button>
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-4 py-2.5 bg-primary text-cream rounded-xl font-medium hover:bg-primary/90 transition-all duration-300 shadow-soft"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-medium bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
         >
           <Printer className="w-4 h-4" />
           Print / Save as PDF

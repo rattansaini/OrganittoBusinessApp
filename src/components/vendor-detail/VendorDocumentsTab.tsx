@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { Plus, FileText, Download, Trash2, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
+import { useConfirm } from '../../contexts/ConfirmContext';
+import AdminOnly from '../AdminOnly';
 
 interface VendorDocumentsTabProps {
   vendorId: string;
@@ -18,6 +21,8 @@ const categories = [
 
 export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps) {
   const { user } = useAuth();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [documents, setDocuments] = useState<any[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -61,7 +66,7 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
 
   const handleUpload = async () => {
     if (!file || !user) {
-      alert('Please choose a file to upload.');
+      toast.error('Please choose a file to upload.');
       return;
     }
 
@@ -95,14 +100,15 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
       setUploadCategory('contracts');
     } catch (error) {
       console.error('Error uploading document:', error);
-      alert('Failed to upload document. Please try again.');
+      toast.error('Failed to upload document. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (docId: string) => {
-    if (!confirm('Delete this document? This cannot be undone.')) return;
+    const confirmed = await confirm({ message: 'Delete this document? This cannot be undone.' });
+    if (!confirmed) return;
 
     setDeletingId(docId);
     try {
@@ -111,7 +117,7 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
       await fetchDocuments();
     } catch (error) {
       console.error('Error deleting document:', error);
-      alert('Failed to delete document. Please try again.');
+      toast.error('Failed to delete document. Please try again.');
     } finally {
       setDeletingId(null);
     }
@@ -121,13 +127,15 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h3 className="font-heading text-xl font-bold text-primary">Documents</h3>
-        <button
-          onClick={() => setShowUploadModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Upload Document
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+          >
+            <Plus className="w-5 h-5" />
+            Upload Document
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -194,17 +202,19 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
                     <Download className="w-4 h-4" />
                     Download
                   </a>
-                  <button
-                    onClick={() => handleDelete(doc.id)}
-                    disabled={deletingId === doc.id}
-                    className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors disabled:opacity-50"
-                  >
-                    {deletingId === doc.id ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-4 h-4" />
-                    )}
-                  </button>
+                  <AdminOnly>
+                    <button
+                      onClick={() => handleDelete(doc.id)}
+                      disabled={deletingId === doc.id}
+                      className="p-2 hover:bg-soft-red/10 text-soft-red rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {deletingId === doc.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  </AdminOnly>
                 </div>
               </div>
             );
@@ -221,12 +231,14 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
               ? 'Upload documents to keep vendor information organized'
               : `No ${getCategoryInfo(selectedCategory).label.toLowerCase()} uploaded yet`}
           </p>
+          <AdminOnly>
           <button
             onClick={() => setShowUploadModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all"
+            className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
           >
             Upload Document
           </button>
+          </AdminOnly>
         </div>
       )}
 
@@ -269,7 +281,7 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
               <button
                 onClick={handleUpload}
                 disabled={saving}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
               >
                 {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
                 {saving ? 'Uploading...' : 'Upload'}

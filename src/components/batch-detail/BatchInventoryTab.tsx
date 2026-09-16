@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Plus, Package, TrendingDown, Calendar } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
+import AdminOnly from '../AdminOnly';
 
 interface BatchInventoryTabProps {
   batchId: string;
@@ -75,10 +76,12 @@ export default function BatchInventoryTab({ batchId, batch, onUpdate }: BatchInv
       <div className="bg-white border-2 border-dark-brown/5 rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-heading text-lg font-bold text-primary">Dispatch History</h3>
-          <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
-            <Plus className="w-4 h-4" />
-            Record Dispatch
-          </button>
+          <AdminOnly>
+            <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
+              <Plus className="w-4 h-4" />
+              Record Dispatch
+            </button>
+          </AdminOnly>
         </div>
 
         {dispatches.length > 0 ? (
@@ -140,7 +143,7 @@ export default function BatchInventoryTab({ batchId, batch, onUpdate }: BatchInv
           <div className="text-center py-8">
             <Package className="w-12 h-12 text-dark-brown/20 mx-auto mb-2" />
             <p className="text-sm text-dark-brown/60 mb-4">No dispatches recorded</p>
-            <button className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+            <button className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
               Record First Dispatch
             </button>
           </div>

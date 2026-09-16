@@ -67,9 +67,11 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
                 </button>
                 <button
                   onClick={() => handleClose(true)}
-                  className={`flex-1 px-6 py-3 text-white font-semibold rounded-xl shadow-soft hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk ${
-                    isDanger ? 'bg-soft-red' : 'bg-primary'
-                  }`}
+                  className={
+                    isDanger
+                      ? 'flex-1 px-6 py-3 text-white font-semibold rounded-xl shadow-soft bg-soft-red hover:shadow-e2 hover:-translate-y-[3px] active:translate-y-[1px] transition-[transform,box-shadow] duration-[180ms] ease-brisk'
+                      : 'flex-1 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform'
+                  }
                 >
                   {options.confirmText ?? (isDanger ? 'Delete' : 'Confirm')}
                 </button>

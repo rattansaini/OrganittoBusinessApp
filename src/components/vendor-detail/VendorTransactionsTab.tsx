@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Calendar, DollarSign, Filter } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import AdminOnly from '../AdminOnly';
 
 interface VendorTransactionsTabProps {
   vendorId: string;
@@ -62,10 +63,12 @@ export default function VendorTransactionsTab({ vendorId }: VendorTransactionsTa
           </select>
         </div>
 
-        <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
-          <Plus className="w-5 h-5" />
-          Add Transaction
-        </button>
+        <AdminOnly>
+          <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
+            <Plus className="w-5 h-5" />
+            Add Transaction
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -170,7 +173,7 @@ export default function VendorTransactionsTab({ vendorId }: VendorTransactionsTa
               No transactions found
             </h3>
             <p className="text-dark-brown/40 mb-4">Start by adding your first transaction</p>
-            <button className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all">
+            <button className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform">
               Add Transaction
             </button>
           </div>

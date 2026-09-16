@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Plus, MessageSquare, Star, User, Edit, Trash2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
+import AdminOnly from '../AdminOnly';
 
 interface VendorNotesTabProps {
   vendorId: string;
@@ -18,6 +20,7 @@ const reviewCategories = [
 
 export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTabProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [notes, setNotes] = useState<any[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -81,13 +84,13 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
       fetchNotes();
     } catch (error) {
       console.error('Error adding note:', error);
-      alert('Error adding note');
+      toast.error('Error adding note');
     }
   };
 
   const handleAddReview = async () => {
     if (!newReview.text.trim()) {
-      alert('Please write a review');
+      toast.error('Please write a review');
       return;
     }
 
@@ -109,7 +112,7 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
       fetchReviews();
     } catch (error) {
       console.error('Error adding review:', error);
-      alert('Error adding review');
+      toast.error('Error adding review');
     }
   };
 
@@ -149,23 +152,25 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
             <h3 className="font-heading text-xl font-bold text-primary">Internal Notes</h3>
           </div>
 
-          <div className="bg-cream/50 rounded-xl p-4 mb-4">
-            <textarea
-              value={newNote}
-              onChange={(e) => setNewNote(e.target.value)}
-              placeholder="Add a note about this vendor..."
-              rows={3}
-              className="w-full px-4 py-3 border-2 border-dark-brown/10 rounded-xl focus:border-accent focus:outline-none resize-none mb-3"
-            />
-            <button
-              onClick={handleAddNote}
-              disabled={!newNote.trim()}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft-lg transition-all disabled:opacity-50"
-            >
-              <Plus className="w-5 h-5" />
-              Add Note
-            </button>
-          </div>
+          <AdminOnly>
+            <div className="bg-cream/50 rounded-xl p-4 mb-4">
+              <textarea
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                placeholder="Add a note about this vendor..."
+                rows={3}
+                className="w-full px-4 py-3 border-2 border-dark-brown/10 rounded-xl focus:border-accent focus:outline-none resize-none mb-3"
+              />
+              <button
+                onClick={handleAddNote}
+                disabled={!newNote.trim()}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform disabled:opacity-50 disabled:hover:translate-y-0"
+              >
+                <Plus className="w-5 h-5" />
+                Add Note
+              </button>
+            </div>
+          </AdminOnly>
 
           <div className="space-y-3">
             {notes.length > 0 ? (
@@ -211,13 +216,15 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-heading text-xl font-bold text-primary">Ratings & Reviews</h3>
-            <button
-              onClick={() => setShowAddReview(!showAddReview)}
-              className="flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent rounded-xl font-semibold transition-colors"
-            >
-              <Plus className="w-5 h-5" />
-              Add Review
-            </button>
+            <AdminOnly>
+              <button
+                onClick={() => setShowAddReview(!showAddReview)}
+                className="flex items-center gap-2 px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent rounded-xl font-semibold transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Add Review
+              </button>
+            </AdminOnly>
           </div>
 
           <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/10 rounded-xl p-6 mb-4">

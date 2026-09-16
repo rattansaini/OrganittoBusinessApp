@@ -3,6 +3,7 @@ import { Plus, Calendar, User as UserIcon } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
 import { format } from 'date-fns';
+import AdminOnly from '../AdminOnly';
 
 interface TasksTabProps {
   productId: string;
@@ -149,13 +150,15 @@ export default function TasksTab({ productId }: TasksTabProps) {
             {stats.completed}/{stats.total} tasks completed
           </p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-sage text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Add Task
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
+          >
+            <Plus className="w-5 h-5" />
+            Add Task
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -267,7 +270,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
           <p className="text-dark-brown/60 mb-4">No tasks created yet</p>
           <button
             onClick={() => setShowModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-primary to-sage text-white font-semibold rounded-xl hover:shadow-soft transition-all"
+            className="px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
           >
             Create First Task
           </button>
@@ -381,7 +384,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 bg-gradient-to-r from-primary to-sage text-white font-semibold rounded-xl hover:shadow-soft-lg transition-all"
+                  className="flex-1 px-6 py-3 rounded-xl text-white font-semibold bg-gradient-to-b from-[#3B6720] to-[#2A4B14] border border-[#1E3A0D] shadow-[inset_0_1px_0_rgba(255,255,255,.2)] shadow-e1 hover:-translate-y-[1px] transition-transform"
                 >
                   Add Task
                 </button>
