@@ -311,7 +311,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
 
             <form onSubmit={handleTestSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Test Category
                 </label>
                 <select
@@ -327,7 +327,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Test Type <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -345,7 +345,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Target Value
                   </label>
                   <input
@@ -358,7 +358,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Actual Value
                   </label>
                   <input
@@ -373,7 +373,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Result
                   </label>
                   <select
@@ -388,7 +388,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Test Date
                   </label>
                   <input
@@ -401,7 +401,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Notes
                 </label>
                 <textarea
@@ -442,7 +442,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
             <form onSubmit={handleBatchSubmit} className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Batch Number <span className="text-soft-red">*</span>
                   </label>
                   <input
@@ -456,7 +456,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Batch Date
                   </label>
                   <input
@@ -470,7 +470,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Quantity
                   </label>
                   <input
@@ -483,7 +483,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Unit
                   </label>
                   <input
@@ -497,7 +497,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Purpose
                 </label>
                 <select
@@ -512,7 +512,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Given To
                 </label>
                 <input
@@ -525,7 +525,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Feedback
                 </label>
                 <textarea
@@ -538,7 +538,7 @@ export default function TestingTab({ productId }: TestingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Rating
                 </label>
                 <div className="flex gap-2">

@@ -91,7 +91,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Room Icon <span className="text-soft-red">*</span>
             </label>
             <div className="grid grid-cols-8 gap-2">
@@ -113,7 +113,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Room Name <span className="text-soft-red">*</span>
             </label>
             <input
@@ -127,7 +127,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Description
             </label>
             <textarea
@@ -140,7 +140,7 @@ export default function CreateRoomModal({ onClose, onSuccess }: CreateRoomModalP
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Room Type <span className="text-soft-red">*</span>
             </label>
             <select

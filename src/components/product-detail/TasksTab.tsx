@@ -163,19 +163,19 @@ export default function TasksTab({ productId }: TasksTabProps) {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 border-2 border-primary/20">
-          <p className="text-sm font-semibold text-dark-brown/70 mb-1">Total Tasks</p>
+          <p className="text-body font-normal text-dark-brown/70 mb-1">Total Tasks</p>
           <p className="text-3xl font-bold text-primary">{stats.total}</p>
         </div>
         <div className="bg-gradient-to-br from-accent/10 to-accent/5 rounded-xl p-4 border-2 border-accent/20">
-          <p className="text-sm font-semibold text-dark-brown/70 mb-1">In Progress</p>
+          <p className="text-body font-normal text-dark-brown/70 mb-1">In Progress</p>
           <p className="text-3xl font-bold text-accent">{stats.inProgress}</p>
         </div>
         <div className="bg-gradient-to-br from-sage/10 to-sage/5 rounded-xl p-4 border-2 border-sage/20">
-          <p className="text-sm font-semibold text-dark-brown/70 mb-1">Completed</p>
+          <p className="text-body font-normal text-dark-brown/70 mb-1">Completed</p>
           <p className="text-3xl font-bold text-sage">{stats.completed}</p>
         </div>
         <div className="bg-gradient-to-br from-soft-red/10 to-soft-red/5 rounded-xl p-4 border-2 border-soft-red/20">
-          <p className="text-sm font-semibold text-dark-brown/70 mb-1">Overdue</p>
+          <p className="text-body font-normal text-dark-brown/70 mb-1">Overdue</p>
           <p className="text-3xl font-bold text-soft-red">{stats.overdue}</p>
         </div>
       </div>
@@ -286,7 +286,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Task Title <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -300,7 +300,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Description
                 </label>
                 <textarea
@@ -314,7 +314,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Category
                   </label>
                   <select
@@ -329,7 +329,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Priority
                   </label>
                   <select
@@ -346,7 +346,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Assign To
                   </label>
                   <select
@@ -362,7 +362,7 @@ export default function TasksTab({ productId }: TasksTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Due Date
                   </label>
                   <input

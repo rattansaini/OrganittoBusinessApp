@@ -318,7 +318,7 @@ export default function CostCalculator() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">Select Product (Optional)</label>
+            <label className="block text-body font-normal text-dark-brown mb-2">Select Product (Optional)</label>
             <select
               value={selectedProduct}
               onChange={(e) => setSelectedProduct(e.target.value)}
@@ -331,7 +331,7 @@ export default function CostCalculator() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">Load Saved Calculation</label>
+            <label className="block text-body font-normal text-dark-brown mb-2">Load Saved Calculation</label>
             <select
               className="w-full px-4 py-3 border-2 border-dark-brown/10 rounded-xl focus:border-accent focus:outline-none"
             >
@@ -352,7 +352,7 @@ export default function CostCalculator() {
             <h3 className="font-heading text-xl font-bold text-primary mb-4">Batch Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Product Name</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Product Name</label>
                 <input
                   type="text"
                   value={productName}
@@ -362,7 +362,7 @@ export default function CostCalculator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Batch Size (Units)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Batch Size (Units)</label>
                 <input
                   type="number"
                   value={batchSize}
@@ -523,7 +523,7 @@ export default function CostCalculator() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Labour Hours</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Labour Hours</label>
                   <input
                     type="number"
                     value={labourHours}
@@ -532,7 +532,7 @@ export default function CostCalculator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Cost per Hour (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Cost per Hour (₹)</label>
                   <input
                     type="number"
                     value={labourCostPerHour}
@@ -549,7 +549,7 @@ export default function CostCalculator() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Electricity (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Electricity (₹)</label>
                   <input
                     type="number"
                     value={electricity}
@@ -558,7 +558,7 @@ export default function CostCalculator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Water (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Water (₹)</label>
                   <input
                     type="number"
                     value={water}
@@ -567,7 +567,7 @@ export default function CostCalculator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Equipment Depreciation (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Equipment Depreciation (₹)</label>
                   <input
                     type="number"
                     value={equipmentDepreciation}
@@ -576,7 +576,7 @@ export default function CostCalculator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Other Utilities (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Other Utilities (₹)</label>
                   <input
                     type="number"
                     value={otherUtilities}
@@ -587,7 +587,7 @@ export default function CostCalculator() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">QC/Testing Cost (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">QC/Testing Cost (₹)</label>
                 <input
                   type="number"
                   value={qcCost}
@@ -614,7 +614,7 @@ export default function CostCalculator() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Monthly Rent (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Monthly Rent (₹)</label>
                 <input
                   type="number"
                   value={monthlyRent}
@@ -623,7 +623,7 @@ export default function CostCalculator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Allocation to this product: {rentAllocation}%
                 </label>
                 <input
@@ -636,7 +636,7 @@ export default function CostCalculator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Batches per Month</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Batches per Month</label>
                 <input
                   type="number"
                   value={batchesPerMonth}
@@ -650,7 +650,7 @@ export default function CostCalculator() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Monthly Salaries (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Monthly Salaries (₹)</label>
                 <input
                   type="number"
                   value={monthlySalaries}
@@ -659,7 +659,7 @@ export default function CostCalculator() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Allocation: {salaryAllocation}%
                 </label>
                 <input
@@ -674,7 +674,7 @@ export default function CostCalculator() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Annual Compliance (₹)</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Annual Compliance (₹)</label>
                   <input
                     type="number"
                     value={annualCompliance}
@@ -683,7 +683,7 @@ export default function CostCalculator() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Annual Batches</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Annual Batches</label>
                   <input
                     type="number"
                     value={annualBatches}
@@ -743,7 +743,7 @@ export default function CostCalculator() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Marketing per Unit (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Marketing per Unit (₹)</label>
                 <input
                   type="number"
                   value={marketingPerUnit}
@@ -754,7 +754,7 @@ export default function CostCalculator() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Shipping Material (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Shipping Material (₹)</label>
                 <input
                   type="number"
                   value={shippingMaterial}
@@ -764,7 +764,7 @@ export default function CostCalculator() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Courier Charges (₹)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Courier Charges (₹)</label>
                 <input
                   type="number"
                   value={courierCharges}
@@ -774,7 +774,7 @@ export default function CostCalculator() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Platform Fees (%)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Platform Fees (%)</label>
                 <input
                   type="number"
                   value={platformFees}
@@ -923,7 +923,7 @@ export default function CostCalculator() {
           <div className="bg-white rounded-2xl shadow-soft-lg max-w-md w-full p-6">
             <h3 className="font-heading text-2xl font-bold text-primary mb-4">Save Calculation</h3>
             <div className="mb-4">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Calculation Name
               </label>
               <input

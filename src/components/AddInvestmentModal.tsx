@@ -227,7 +227,7 @@ export default function AddInvestmentModal({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Partner <span className="text-soft-red">*</span>
             </label>
             <div className="relative">
@@ -270,7 +270,7 @@ export default function AddInvestmentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Investment Amount <span className="text-soft-red">*</span>
             </label>
             <div className="relative">
@@ -297,7 +297,7 @@ export default function AddInvestmentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Investment Date <span className="text-soft-red">*</span>
             </label>
             <div className="relative">
@@ -313,7 +313,7 @@ export default function AddInvestmentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Purpose / Category <span className="text-soft-red">*</span>
             </label>
             <div className="relative">
@@ -335,7 +335,7 @@ export default function AddInvestmentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Payment Proof (Optional)
             </label>
             <div className="border-2 border-dashed border-dark-brown/20 rounded-xl p-6 hover:border-accent transition-colors">
@@ -373,7 +373,7 @@ export default function AddInvestmentModal({
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Notes (Optional)
             </label>
             <div className="relative">

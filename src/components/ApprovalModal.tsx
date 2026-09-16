@@ -100,7 +100,7 @@ export default function ApprovalModal({
 
         <div className="p-6">
           <div className="bg-cream/50 rounded-xl p-4 mb-6">
-            <h3 className="text-sm font-semibold text-dark-brown/60 mb-3">Expense Details</h3>
+            <h3 className="text-body font-normal text-dark-brown/60 mb-3">Expense Details</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-dark-brown/70">Category:</span>
@@ -137,7 +137,7 @@ export default function ApprovalModal({
           {type === 'reject' ? (
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Reason for Rejection <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -156,7 +156,7 @@ export default function ApprovalModal({
 
               {selectedReason === 'Other (specify below)' && (
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Specify Reason
                   </label>
                   <textarea
@@ -178,7 +178,7 @@ export default function ApprovalModal({
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Comments (Optional)
               </label>
               <textarea

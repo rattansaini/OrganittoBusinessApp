@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, ThumbsUp, Eye, Download } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import AdminOnly from '../AdminOnly';
 
 interface PackagingTabProps {
   productId: string;
@@ -95,13 +96,15 @@ export default function PackagingTab({ productId }: PackagingTabProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-2xl font-bold text-primary">Packaging Designs</h3>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-secondary to-accent text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Upload Design
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-secondary to-accent text-white rounded-xl font-semibold hover:shadow-soft transition-all"
+          >
+            <Plus className="w-5 h-5" />
+            Upload Design
+          </button>
+        </AdminOnly>
       </div>
 
       {designs.length > 0 ? (
@@ -181,7 +184,7 @@ export default function PackagingTab({ productId }: PackagingTabProps) {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Design Name <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -195,7 +198,7 @@ export default function PackagingTab({ productId }: PackagingTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Image URL <span className="text-soft-red">*</span>
                 </label>
                 <input

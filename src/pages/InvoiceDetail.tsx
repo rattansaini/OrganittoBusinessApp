@@ -145,8 +145,8 @@ export default function InvoiceDetail() {
         <table className="w-full mb-8">
           <thead>
             <tr className="border-b-2 border-primary/10 text-left">
-              <th className="py-3 text-sm font-semibold text-dark-brown/70">Item</th>
-              <th className="py-3 text-sm font-semibold text-dark-brown/70">SKU</th>
+              <th className="py-3 text-body font-normal text-dark-brown/70">Item</th>
+              <th className="py-3 text-body font-normal text-dark-brown/70">SKU</th>
               <th className="py-3 text-sm font-semibold text-dark-brown/70 text-right">Qty</th>
               <th className="py-3 text-sm font-semibold text-dark-brown/70 text-right">Unit Price</th>
               <th className="py-3 text-sm font-semibold text-dark-brown/70 text-right">Amount</th>

@@ -161,7 +161,7 @@ export default function ResetPassword() {
           {!success && (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-dark-brown mb-2">
+                <label htmlFor="password" className="block text-body font-normal text-dark-brown mb-2">
                   New Password
                 </label>
                 <div className="relative">
@@ -180,7 +180,7 @@ export default function ResetPassword() {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-dark-brown mb-2">
+                <label htmlFor="confirmPassword" className="block text-body font-normal text-dark-brown mb-2">
                   Confirm Password
                 </label>
                 <div className="relative">

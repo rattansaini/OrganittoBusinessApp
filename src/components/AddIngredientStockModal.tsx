@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Plus } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { format, addMonths } from 'date-fns';
 
 interface AddIngredientStockModalProps {
@@ -12,6 +13,7 @@ interface AddIngredientStockModalProps {
 
 export default function AddIngredientStockModal({ vendors, onClose, onSuccess }: AddIngredientStockModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<any[]>([]);
   const [showNewIngredient, setShowNewIngredient] = useState(false);
@@ -73,7 +75,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
 
   const handleCreateNewIngredient = async () => {
     if (!newIngredientData.commonName) {
-      alert('Please enter ingredient name');
+      toast.error('Please enter ingredient name');
       return null;
     }
 
@@ -100,7 +102,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
       return data;
     } catch (error) {
       console.error('Error creating ingredient:', error);
-      alert('Error creating ingredient');
+      toast.error('Error creating ingredient');
       return null;
     }
   };
@@ -117,7 +119,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
     }
 
     if (!ingredientId || !formData.quantity || !formData.purchaseDate || !formData.expiryDate) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -153,7 +155,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
       onSuccess();
     } catch (error) {
       console.error('Error adding stock:', error);
-      alert('Error adding stock. Please try again.');
+      toast.error('Error adding stock. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -178,7 +180,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
           {!showNewIngredient ? (
             <div>
               <div className="flex items-center justify-between mb-4">
-                <label className="block text-sm font-semibold text-dark-brown">
+                <label className="block text-body font-normal text-dark-brown">
                   Select Ingredient <span className="text-soft-red">*</span>
                 </label>
                 <button
@@ -222,7 +224,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Common Name <span className="text-soft-red">*</span>
                   </label>
                   <input
@@ -236,7 +238,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Botanical/Scientific Name
                   </label>
                   <input
@@ -249,7 +251,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Type <span className="text-soft-red">*</span>
                   </label>
                   <select
@@ -270,7 +272,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Category <span className="text-soft-red">*</span>
                   </label>
                   <select
@@ -288,7 +290,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Default Unit <span className="text-soft-red">*</span>
                   </label>
                   <select
@@ -305,7 +307,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Typical Shelf Life (months)
                   </label>
                   <input
@@ -318,7 +320,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Reorder Level
                   </label>
                   <input
@@ -332,7 +334,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Preferred Vendor
                   </label>
                   <select
@@ -350,7 +352,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Storage Conditions
                   </label>
                   <textarea
@@ -369,7 +371,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Stock Purchase Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Purchase Date <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -383,7 +385,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Quantity Purchased <span className="text-soft-red">*</span>
                 </label>
                 <div className="flex gap-2">
@@ -404,7 +406,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Expiry Date <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -418,7 +420,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Lot/Batch Number
                 </label>
                 <input
@@ -431,7 +433,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Vendor <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -450,7 +452,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Cost per Unit
                 </label>
                 <input
@@ -465,7 +467,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Invoice Number
                 </label>
                 <input
@@ -478,7 +480,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Storage Location
                 </label>
                 <input
@@ -491,7 +493,7 @@ export default function AddIngredientStockModal({ vendors, onClose, onSuccess }:
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Notes
                 </label>
                 <textarea

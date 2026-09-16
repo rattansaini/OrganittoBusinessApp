@@ -159,7 +159,7 @@ export default function Compliance() {
             <Shield className="w-8 h-8 text-primary" />
             <span className="text-3xl font-bold text-primary">{stats.total}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Total Licenses</p>
+          <p className="text-body font-normal text-dark-brown/70">Total Licenses</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -167,7 +167,7 @@ export default function Compliance() {
             <CheckCircle className="w-8 h-8 text-sage" />
             <span className="text-3xl font-bold text-sage">{stats.active}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Active & Valid</p>
+          <p className="text-body font-normal text-dark-brown/70">Active & Valid</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -175,7 +175,7 @@ export default function Compliance() {
             <Clock className="w-8 h-8 text-accent" />
             <span className="text-3xl font-bold text-accent">{stats.expiringSoon}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Renewal Due Soon</p>
+          <p className="text-body font-normal text-dark-brown/70">Renewal Due Soon</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -183,7 +183,7 @@ export default function Compliance() {
             <AlertTriangle className="w-8 h-8 text-soft-red" />
             <span className="text-3xl font-bold text-soft-red">{stats.expired}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Expired</p>
+          <p className="text-body font-normal text-dark-brown/70">Expired</p>
         </div>
       </div>
 

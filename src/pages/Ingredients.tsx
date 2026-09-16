@@ -175,7 +175,7 @@ export default function Ingredients() {
               {alerts.expired}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Expired</p>
+          <p className="text-body font-normal text-dark-brown/70">Expired</p>
         </button>
 
         <button
@@ -190,7 +190,7 @@ export default function Ingredients() {
               {alerts.expiring15d}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Expiring {'<'}15 days</p>
+          <p className="text-body font-normal text-dark-brown/70">Expiring {'<'}15 days</p>
         </button>
 
         <button
@@ -205,7 +205,7 @@ export default function Ingredients() {
               {alerts.expiring30d}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Expiring 15-30 days</p>
+          <p className="text-body font-normal text-dark-brown/70">Expiring 15-30 days</p>
         </button>
 
         <button
@@ -220,7 +220,7 @@ export default function Ingredients() {
               {alerts.lowStock}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Low Stock</p>
+          <p className="text-body font-normal text-dark-brown/70">Low Stock</p>
         </button>
 
         <button
@@ -235,7 +235,7 @@ export default function Ingredients() {
               {alerts.reorderNeeded}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Reorder Needed</p>
+          <p className="text-body font-normal text-dark-brown/70">Reorder Needed</p>
         </button>
       </div>
 

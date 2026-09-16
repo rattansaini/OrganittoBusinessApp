@@ -199,7 +199,7 @@ export default function ProductPipeline() {
           <div className="bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl p-6 border-2 border-primary/30 shadow-soft">
             <div className="flex items-center gap-3 mb-2">
               <Package className="w-6 h-6 text-primary" />
-              <span className="text-sm font-semibold text-dark-brown/70">Total Products</span>
+              <span className="text-body font-normal text-dark-brown/70">Total Products</span>
             </div>
             <p className="text-4xl font-bold text-primary">{totalProducts}</p>
           </div>
@@ -207,7 +207,7 @@ export default function ProductPipeline() {
           <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-xl p-6 border-2 border-accent/30 shadow-soft">
             <div className="flex items-center gap-3 mb-2">
               <AlertTriangle className="w-6 h-6 text-accent" />
-              <span className="text-sm font-semibold text-dark-brown/70">In Development</span>
+              <span className="text-body font-normal text-dark-brown/70">In Development</span>
             </div>
             <p className="text-4xl font-bold text-accent">{inDevelopment}</p>
           </div>
@@ -215,7 +215,7 @@ export default function ProductPipeline() {
           <div className="bg-gradient-to-br from-sage/20 to-sage/10 rounded-xl p-6 border-2 border-sage/30 shadow-soft">
             <div className="flex items-center gap-3 mb-2">
               <Rocket className="w-6 h-6 text-sage" />
-              <span className="text-sm font-semibold text-dark-brown/70">Launched</span>
+              <span className="text-body font-normal text-dark-brown/70">Launched</span>
             </div>
             <p className="text-4xl font-bold text-sage">{launched}</p>
           </div>
@@ -223,7 +223,7 @@ export default function ProductPipeline() {
           <div className="bg-gradient-to-br from-soft-red/20 to-soft-red/10 rounded-xl p-6 border-2 border-soft-red/30 shadow-soft">
             <div className="flex items-center gap-3 mb-2">
               <CheckCircle className="w-6 h-6 text-soft-red" />
-              <span className="text-sm font-semibold text-dark-brown/70">High Priority</span>
+              <span className="text-body font-normal text-dark-brown/70">High Priority</span>
             </div>
             <p className="text-4xl font-bold text-soft-red">{highPriority}</p>
           </div>

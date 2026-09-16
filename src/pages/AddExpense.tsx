@@ -244,7 +244,7 @@ export default function AddExpense() {
       <form className="bg-panel border border-edge rounded-2xl shadow-e1 p-6 md:p-8">
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Expense Category <span className="text-soft-red">*</span>
             </label>
             <select
@@ -267,7 +267,7 @@ export default function AddExpense() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Subcategory (Optional)
             </label>
             <input
@@ -282,7 +282,7 @@ export default function AddExpense() {
           <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent my-6" />
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Amount <span className="text-soft-red">*</span>
             </label>
             <div className="relative">
@@ -308,7 +308,7 @@ export default function AddExpense() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Date <span className="text-soft-red">*</span>
               </label>
               <input
@@ -325,7 +325,7 @@ export default function AddExpense() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Paid By <span className="text-soft-red">*</span>
               </label>
               <select
@@ -349,7 +349,7 @@ export default function AddExpense() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-3">
+            <label className="block text-body font-normal text-dark-brown mb-3">
               Payment Mode <span className="text-soft-red">*</span>
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -372,7 +372,7 @@ export default function AddExpense() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Vendor (Optional)
             </label>
             <select
@@ -392,7 +392,7 @@ export default function AddExpense() {
           <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent my-6" />
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Bill/Receipt Upload (Optional)
             </label>
             <div className="relative">
@@ -450,7 +450,7 @@ export default function AddExpense() {
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-semibold text-dark-brown">
+              <label className="block text-body font-normal text-dark-brown">
                 Purpose/Notes (Optional)
               </label>
               <span className="text-xs text-dark-brown/50">{characterCount}/500</span>

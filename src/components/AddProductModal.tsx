@@ -111,7 +111,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Product Name <span className="text-soft-red">*</span>
             </label>
             <input
@@ -126,7 +126,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Category <span className="text-soft-red">*</span>
               </label>
               <select
@@ -143,7 +143,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Product Type
               </label>
               <select
@@ -161,7 +161,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Initial Stage
               </label>
               <select
@@ -176,7 +176,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Target Launch Date
               </label>
               <input
@@ -189,7 +189,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Priority
             </label>
             <div className="flex gap-4">
@@ -221,7 +221,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Description
             </label>
             <textarea
@@ -234,7 +234,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Assign Team Members
             </label>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -260,7 +260,7 @@ export default function AddProductModal({ isOpen, onClose, onSubmit, users }: Ad
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-dark-brown mb-2">
+            <label className="block text-body font-normal text-dark-brown mb-2">
               Product Image URL
             </label>
             <div className="flex gap-3">

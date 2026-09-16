@@ -257,7 +257,7 @@ export default function ProfitLoss() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b-2 border-primary/10 text-left">
-                    <th className="px-3 py-3 text-sm font-semibold text-dark-brown/70">Month</th>
+                    <th className="px-3 py-3 text-body font-normal text-dark-brown/70">Month</th>
                     <th className="px-3 py-3 text-sm font-semibold text-dark-brown/70 text-right">Revenue</th>
                     <th className="px-3 py-3 text-sm font-semibold text-dark-brown/70 text-right">Expenses</th>
                     <th className="px-3 py-3 text-sm font-semibold text-dark-brown/70 text-right">Profit</th>

@@ -260,7 +260,7 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
             <div className="bg-cream/50 rounded-xl p-4 mb-4">
               <div className="space-y-3">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Category
                   </label>
                   <select
@@ -277,7 +277,7 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Rating
                   </label>
                   {renderStars(newReview.rating, true, (rating) =>
@@ -286,7 +286,7 @@ export default function VendorNotesTab({ vendorId, vendorRating }: VendorNotesTa
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Review
                   </label>
                   <textarea

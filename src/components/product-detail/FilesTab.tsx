@@ -263,7 +263,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Category <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -279,7 +279,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   File Name <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -293,7 +293,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   File URL <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -310,7 +310,7 @@ export default function FilesTab({ productId }: FilesTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   File Type
                 </label>
                 <select

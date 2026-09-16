@@ -3,6 +3,7 @@ import { Calendar, User as UserIcon, Clock, TrendingUp } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import AdminOnly from '../AdminOnly';
 
 interface OverviewTabProps {
   product: any;
@@ -103,12 +104,14 @@ export default function OverviewTab({ product, onRefresh }: OverviewTabProps) {
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-heading text-xl font-bold text-primary">Product Information</h3>
               {!editing && (
-                <button
-                  onClick={() => setEditing(true)}
-                  className="px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent rounded-lg font-semibold transition-colors"
-                >
-                  Edit Description
-                </button>
+                <AdminOnly>
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="px-4 py-2 bg-accent/10 hover:bg-accent/20 text-accent rounded-lg font-semibold transition-colors"
+                  >
+                    Edit Description
+                  </button>
+                </AdminOnly>
               )}
             </div>
 
@@ -157,21 +160,21 @@ export default function OverviewTab({ product, onRefresh }: OverviewTabProps) {
 
             <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t-2 border-dark-brown/5">
               <div>
-                <p className="text-sm font-semibold text-dark-brown/60 mb-1">Category</p>
+                <p className="text-body font-normal text-dark-brown/60 mb-1">Category</p>
                 <p className="text-dark-brown font-semibold">{product.category}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-dark-brown/60 mb-1">Product Type</p>
+                <p className="text-body font-normal text-dark-brown/60 mb-1">Product Type</p>
                 <p className="text-dark-brown font-semibold">{product.product_type || 'Not specified'}</p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-dark-brown/60 mb-1">Created Date</p>
+                <p className="text-body font-normal text-dark-brown/60 mb-1">Created Date</p>
                 <p className="text-dark-brown font-semibold">
                   {format(new Date(product.created_at), 'MMM dd, yyyy')}
                 </p>
               </div>
               <div>
-                <p className="text-sm font-semibold text-dark-brown/60 mb-1">Created By</p>
+                <p className="text-body font-normal text-dark-brown/60 mb-1">Created By</p>
                 <p className="text-dark-brown font-semibold">{creator?.name || 'Unknown'}</p>
               </div>
             </div>

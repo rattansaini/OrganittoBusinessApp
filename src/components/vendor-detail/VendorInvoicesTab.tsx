@@ -308,7 +308,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Invoice Number *</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Invoice Number *</label>
                 <input
                   type="text"
                   value={formData.invoice_number}
@@ -320,7 +320,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Invoice Date *</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Invoice Date *</label>
                   <input
                     type="date"
                     value={formData.date}
@@ -329,7 +329,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Due Date *</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Due Date *</label>
                   <input
                     type="date"
                     value={formData.due_date}
@@ -341,7 +341,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Amount (₹) *</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Amount (₹) *</label>
                   <input
                     type="number"
                     value={formData.amount}
@@ -351,7 +351,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">Status</label>
+                  <label className="block text-body font-normal text-dark-brown mb-2">Status</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
@@ -365,7 +365,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Notes</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Notes</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
@@ -375,7 +375,7 @@ export default function VendorInvoicesTab({ vendorId }: VendorInvoicesTabProps) 
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Invoice File (PDF/Image)</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Invoice File (PDF/Image)</label>
                 <input
                   type="file"
                   accept="image/*,.pdf"

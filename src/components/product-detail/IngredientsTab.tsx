@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useConfirm } from '../../contexts/ConfirmContext';
+import AdminOnly from '../AdminOnly';
 
 interface IngredientsTabProps {
   productId: string;
@@ -20,6 +22,7 @@ const ayurvedicProperties = [
 
 export default function IngredientsTab({ productId }: IngredientsTabProps) {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const [ingredients, setIngredients] = useState<any[]>([]);
   const [versions, setVersions] = useState<any[]>([]);
   const [currentVersion, setCurrentVersion] = useState<any>(null);
@@ -121,7 +124,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this ingredient?')) return;
+    if (!(await confirm({ message: 'Are you sure you want to delete this ingredient?' }))) return;
 
     try {
       const { error } = await supabase
@@ -169,13 +172,15 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="font-heading text-2xl font-bold text-primary">Ingredients List</h3>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sage to-primary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
-        >
-          <Plus className="w-5 h-5" />
-          Add Ingredient
-        </button>
+        <AdminOnly>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sage to-primary text-white rounded-xl font-semibold hover:shadow-soft transition-all"
+          >
+            <Plus className="w-5 h-5" />
+            Add Ingredient
+          </button>
+        </AdminOnly>
       </div>
 
       <div className="bg-white rounded-xl border-2 border-dark-brown/5 overflow-hidden">
@@ -244,20 +249,22 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => handleEdit(ingredient)}
-                        className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(ingredient.id)}
-                        className="p-2 text-soft-red hover:bg-soft-red/10 rounded-lg transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
+                    <AdminOnly>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(ingredient)}
+                          className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(ingredient.id)}
+                          className="p-2 text-soft-red hover:bg-soft-red/10 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </AdminOnly>
                   </td>
                 </tr>
               ))}
@@ -281,12 +288,14 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
         <div className="text-center py-12 bg-cream/30 rounded-xl">
           <span className="text-6xl mb-4 block">🌿</span>
           <p className="text-dark-brown/60 mb-4">No ingredients added yet</p>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-sage to-primary text-white font-semibold rounded-xl hover:shadow-soft transition-all"
-          >
-            Add Your First Ingredient
-          </button>
+          <AdminOnly>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-6 py-3 bg-gradient-to-r from-sage to-primary text-white font-semibold rounded-xl hover:shadow-soft transition-all"
+            >
+              Add Your First Ingredient
+            </button>
+          </AdminOnly>
         </div>
       )}
 
@@ -308,7 +317,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Ingredient Name <span className="text-soft-red">*</span>
                   </label>
                   <input
@@ -322,7 +331,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Botanical Name
                   </label>
                   <input
@@ -337,7 +346,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Type
                   </label>
                   <select
@@ -353,7 +362,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Quantity
                   </label>
                   <input
@@ -367,7 +376,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Unit
                   </label>
                   <select
@@ -384,7 +393,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Vendor/Source
                   </label>
                   <input
@@ -397,7 +406,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Cost per Unit (₹)
                   </label>
                   <input
@@ -412,7 +421,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Ayurvedic Properties
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -438,7 +447,7 @@ export default function IngredientsTab({ productId }: IngredientsTabProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Notes
                 </label>
                 <textarea

@@ -169,7 +169,7 @@ export default function ProductDetail() {
 
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-dark-brown/70">Stage Progress</span>
+                <span className="text-body font-normal text-dark-brown/70">Stage Progress</span>
                 <span className="text-sm font-bold text-accent">{product.progress}%</span>
               </div>
               <div className="w-full h-3 bg-dark-brown/10 rounded-full overflow-hidden">

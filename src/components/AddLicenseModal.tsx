@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { format } from 'date-fns';
 
 interface AddLicenseModalProps {
@@ -24,6 +25,7 @@ const LICENSE_TYPES = [
 
 export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [noExpiry, setNoExpiry] = useState(false);
 
@@ -46,12 +48,12 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
     e.preventDefault();
 
     if (!formData.licenseNumber || !formData.issuedTo || !formData.issuingAuthority || !formData.issueDate) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
 
     if (!noExpiry && !formData.expiryDate) {
-      alert('Please provide an expiry date or check "No Expiry"');
+      toast.error('Please provide an expiry date or check "No Expiry"');
       return;
     }
 
@@ -83,7 +85,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
       onSuccess();
     } catch (error) {
       console.error('Error adding license:', error);
-      alert('Error adding license. Please try again.');
+      toast.error('Error adding license. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -105,7 +107,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 License Type <span className="text-soft-red">*</span>
               </label>
               <select
@@ -123,7 +125,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 License/Certificate Number <span className="text-soft-red">*</span>
               </label>
               <input
@@ -137,7 +139,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Issued To <span className="text-soft-red">*</span>
               </label>
               <input
@@ -151,7 +153,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Issuing Authority <span className="text-soft-red">*</span>
               </label>
               <input
@@ -165,7 +167,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Issue Date <span className="text-soft-red">*</span>
               </label>
               <input
@@ -180,7 +182,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-semibold text-dark-brown">
+                <label className="block text-body font-normal text-dark-brown">
                   Expiry Date {!noExpiry && <span className="text-soft-red">*</span>}
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -210,7 +212,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Renewal Reminder (days before expiry)
               </label>
               <input
@@ -224,7 +226,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Status <span className="text-soft-red">*</span>
               </label>
               <select
@@ -241,7 +243,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Scope/Coverage
               </label>
               <textarea
@@ -254,7 +256,7 @@ export default function AddLicenseModal({ onClose, onSuccess }: AddLicenseModalP
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-dark-brown mb-2">
+              <label className="block text-body font-normal text-dark-brown mb-2">
                 Notes
               </label>
               <textarea

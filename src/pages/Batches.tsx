@@ -157,7 +157,7 @@ export default function Batches() {
             <CheckCircle className="w-8 h-8 text-sage" />
             <span className="text-3xl font-bold text-sage">{stats.activeBatches}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Active Batches</p>
+          <p className="text-body font-normal text-dark-brown/70">Active Batches</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -165,7 +165,7 @@ export default function Batches() {
             <Package className="w-8 h-8 text-primary" />
             <span className="text-3xl font-bold text-primary">{stats.totalUnits}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Total Units in Stock</p>
+          <p className="text-body font-normal text-dark-brown/70">Total Units in Stock</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -175,7 +175,7 @@ export default function Batches() {
               {stats.expiringSoon}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Expiring Soon (30d)</p>
+          <p className="text-body font-normal text-dark-brown/70">Expiring Soon (30d)</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -183,7 +183,7 @@ export default function Batches() {
             <Clock className="w-8 h-8 text-blue-500" />
             <span className="text-3xl font-bold text-blue-500">{stats.productsWithBatches}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Products with Batches</p>
+          <p className="text-body font-normal text-dark-brown/70">Products with Batches</p>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ export default function Batches() {
                     <h3 className="font-mono text-lg font-bold text-primary group-hover:text-accent transition-colors mb-1">
                       {batch.batch_number}
                     </h3>
-                    <p className="text-sm font-semibold text-dark-brown">
+                    <p className="text-body font-normal text-dark-brown">
                       {batch.products?.name || 'Unknown Product'}
                     </p>
                   </div>

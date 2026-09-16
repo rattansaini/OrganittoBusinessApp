@@ -153,7 +153,7 @@ export default function Vendors() {
             <Users className="w-8 h-8 text-primary" />
             <span className="text-3xl font-bold text-primary">{stats.total}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Total Vendors</p>
+          <p className="text-body font-normal text-dark-brown/70">Total Vendors</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -161,7 +161,7 @@ export default function Vendors() {
             <TrendingUp className="w-8 h-8 text-sage" />
             <span className="text-3xl font-bold text-sage">{stats.active}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Active Vendors</p>
+          <p className="text-body font-normal text-dark-brown/70">Active Vendors</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -171,7 +171,7 @@ export default function Vendors() {
               ₹{stats.pendingPayments.toFixed(0)}
             </span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Pending Payments</p>
+          <p className="text-body font-normal text-dark-brown/70">Pending Payments</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-soft p-6">
@@ -179,7 +179,7 @@ export default function Vendors() {
             <Award className="w-8 h-8 text-amber-500" />
             <span className="text-3xl font-bold text-amber-500">{stats.avgRating.toFixed(1)}</span>
           </div>
-          <p className="text-sm font-semibold text-dark-brown/70">Average Rating</p>
+          <p className="text-body font-normal text-dark-brown/70">Average Rating</p>
         </div>
       </div>
 

@@ -455,7 +455,7 @@ export default function ExpenseList() {
               <div className="bg-cream/50 rounded-xl p-4 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-dark-brown mb-2">
+                    <label className="block text-body font-normal text-dark-brown mb-2">
                       Date From
                     </label>
                     <input
@@ -466,7 +466,7 @@ export default function ExpenseList() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-dark-brown mb-2">
+                    <label className="block text-body font-normal text-dark-brown mb-2">
                       Date To
                     </label>
                     <input
@@ -479,7 +479,7 @@ export default function ExpenseList() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Categories
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -500,7 +500,7 @@ export default function ExpenseList() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label className="block text-body font-normal text-dark-brown mb-2">
                     Payment Mode
                   </label>
                   <div className="flex flex-wrap gap-2">

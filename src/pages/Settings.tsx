@@ -191,7 +191,7 @@ export default function Settings() {
 
               <form onSubmit={handleProfileUpdate} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="name" className="block text-body font-normal text-dark-brown mb-2">
                     Full Name
                   </label>
                   <div className="relative">
@@ -209,7 +209,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="email" className="block text-body font-normal text-dark-brown mb-2">
                     Email Address
                   </label>
                   <div className="relative">
@@ -226,7 +226,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="phone" className="block text-body font-normal text-dark-brown mb-2">
                     Phone Number
                   </label>
                   <div className="relative">
@@ -289,7 +289,7 @@ export default function Settings() {
 
               <form onSubmit={handlePasswordChange} className="space-y-6">
                 <div>
-                  <label htmlFor="currentPassword" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="currentPassword" className="block text-body font-normal text-dark-brown mb-2">
                     Current Password
                   </label>
                   <div className="relative">
@@ -308,7 +308,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <label htmlFor="newPassword" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="newPassword" className="block text-body font-normal text-dark-brown mb-2">
                     New Password
                   </label>
                   <div className="relative">
@@ -329,7 +329,7 @@ export default function Settings() {
                 </div>
 
                 <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-dark-brown mb-2">
+                  <label htmlFor="confirmPassword" className="block text-body font-normal text-dark-brown mb-2">
                     Confirm New Password
                   </label>
                   <div className="relative">

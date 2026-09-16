@@ -161,7 +161,7 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-dark-brown mb-2">
+              <label htmlFor="name" className="block text-body font-normal text-dark-brown mb-2">
                 Full Name *
               </label>
               <div className="relative">
@@ -181,7 +181,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-dark-brown mb-2">
+              <label htmlFor="email" className="block text-body font-normal text-dark-brown mb-2">
                 Email Address *
               </label>
               <div className="relative">
@@ -201,7 +201,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-dark-brown mb-2">
+              <label htmlFor="phone" className="block text-body font-normal text-dark-brown mb-2">
                 Phone Number *
               </label>
               <div className="relative">
@@ -221,7 +221,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-dark-brown mb-2">
+              <label htmlFor="password" className="block text-body font-normal text-dark-brown mb-2">
                 Password *
               </label>
               <div className="relative">
@@ -243,7 +243,7 @@ export default function Register() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-dark-brown mb-2">
+              <label htmlFor="confirmPassword" className="block text-body font-normal text-dark-brown mb-2">
                 Confirm Password *
               </label>
               <div className="relative">

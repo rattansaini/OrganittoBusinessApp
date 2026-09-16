@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { format, addMonths } from 'date-fns';
 
 interface AddBatchModalProps {
@@ -12,6 +13,7 @@ interface AddBatchModalProps {
 
 export default function AddBatchModal({ products, onClose, onSuccess }: AddBatchModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [formData, setFormData] = useState({
@@ -120,7 +122,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
     e.preventDefault();
 
     if (!selectedProduct || !formData.batchNumber || !formData.batchSize) {
-      alert('Please fill in all required fields');
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -176,7 +178,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
       onSuccess();
     } catch (error) {
       console.error('Error creating batch:', error);
-      alert('Error creating batch. Please try again.');
+      toast.error('Error creating batch. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -200,7 +202,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Batch Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Product <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -222,7 +224,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Batch Number <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -236,7 +238,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Batch Size (units) <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -251,7 +253,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Manufacturing Date <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -268,7 +270,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Expiry Date <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -281,7 +283,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Storage Location
                 </label>
                 <input
@@ -418,7 +420,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, ingredientsVerified: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">All ingredients verified</span>
+                <span className="text-body font-normal text-dark-brown">All ingredients verified</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -427,7 +429,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, formulaFollowed: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">Formula followed correctly</span>
+                <span className="text-body font-normal text-dark-brown">Formula followed correctly</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -436,7 +438,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, phTestPassed: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">pH test passed (if applicable)</span>
+                <span className="text-body font-normal text-dark-brown">pH test passed (if applicable)</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -445,7 +447,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, visualInspectionPassed: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">Visual inspection passed</span>
+                <span className="text-body font-normal text-dark-brown">Visual inspection passed</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -454,7 +456,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, packagingChecked: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">Packaging quality checked</span>
+                <span className="text-body font-normal text-dark-brown">Packaging quality checked</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -463,7 +465,7 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, labelsApplied: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">Labels applied correctly</span>
+                <span className="text-body font-normal text-dark-brown">Labels applied correctly</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -472,11 +474,11 @@ export default function AddBatchModal({ products, onClose, onSuccess }: AddBatch
                   onChange={(e) => setQcChecklist({ ...qcChecklist, batchApproved: e.target.checked })}
                   className="w-5 h-5 text-sage focus:ring-sage rounded"
                 />
-                <span className="text-sm font-semibold text-dark-brown">Batch approved for distribution</span>
+                <span className="text-body font-normal text-dark-brown">Batch approved for distribution</span>
               </label>
 
               <div className="pt-3 border-t border-dark-brown/10">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   QC Notes
                 </label>
                 <textarea

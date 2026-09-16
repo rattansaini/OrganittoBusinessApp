@@ -257,7 +257,7 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">Category</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">Category</label>
                 <select
                   value={uploadCategory}
                   onChange={(e) => setUploadCategory(e.target.value)}
@@ -270,7 +270,7 @@ export default function VendorDocumentsTab({ vendorId }: VendorDocumentsTabProps
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">File *</label>
+                <label className="block text-body font-normal text-dark-brown mb-2">File *</label>
                 <input
                   type="file"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}

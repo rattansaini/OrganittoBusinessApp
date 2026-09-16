@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Star, Upload } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 
 interface AddVendorModalProps {
   onClose: () => void;
@@ -30,6 +31,7 @@ const paymentTerms = [
 
 export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalProps) {
   const { user } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -61,7 +63,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
     e.preventDefault();
 
     if (!formData.name || !formData.phone) {
-      alert('Please fill in required fields (Name and Phone)');
+      toast.error('Please fill in required fields (Name and Phone)');
       return;
     }
 
@@ -108,7 +110,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
       onSuccess();
     } catch (error) {
       console.error('Error adding vendor:', error);
-      alert('Error adding vendor. Please try again.');
+      toast.error('Error adding vendor. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -132,7 +134,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Basic Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Vendor Name <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -146,7 +148,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Category <span className="text-soft-red">*</span>
                 </label>
                 <select
@@ -161,7 +163,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Contact Person
                 </label>
                 <input
@@ -174,7 +176,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Products/Services
                 </label>
                 <textarea
@@ -192,7 +194,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Contact Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Phone Number <span className="text-soft-red">*</span>
                 </label>
                 <input
@@ -206,7 +208,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Email
                 </label>
                 <input
@@ -219,7 +221,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Alternative Phone
                 </label>
                 <input
@@ -232,7 +234,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Website
                 </label>
                 <input
@@ -245,7 +247,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Address
                 </label>
                 <textarea
@@ -263,7 +265,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Business Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   GST Number
                 </label>
                 <input
@@ -276,7 +278,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Payment Terms
                 </label>
                 <select
@@ -296,7 +298,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Bank Details (Optional)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Bank Name
                 </label>
                 <input
@@ -309,7 +311,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   Account Number
                 </label>
                 <input
@@ -322,7 +324,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-2">
+                <label className="block text-body font-normal text-dark-brown mb-2">
                   IFSC Code
                 </label>
                 <input
@@ -340,7 +342,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
             <h3 className="font-heading text-lg font-bold text-primary mb-4">Quality & Rating</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-3">
+                <label className="block text-body font-normal text-dark-brown mb-3">
                   Initial Rating
                 </label>
                 <div className="flex items-center gap-2">
@@ -367,7 +369,7 @@ export default function AddVendorModal({ onClose, onSuccess }: AddVendorModalPro
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-dark-brown mb-3">
+                <label className="block text-body font-normal text-dark-brown mb-3">
                   Quality Certifications
                 </label>
                 <div className="space-y-2">

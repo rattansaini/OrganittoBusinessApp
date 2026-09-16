@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import AdminOnly from '../AdminOnly';
 
 interface BatchQualityTabProps {
   batchId: string;
@@ -66,7 +67,7 @@ export default function BatchQualityTab({ batchId, batch }: BatchQualityTabProps
                 ) : (
                   <XCircle className="w-5 h-5 text-dark-brown/20 flex-shrink-0" />
                 )}
-                <span className={`text-sm font-semibold ${
+                <span className={`text-body font-normal ${
                   qcChecklist[item.key] ? 'text-dark-brown' : 'text-dark-brown/40'
                 }`}>
                   {item.label}
@@ -77,7 +78,7 @@ export default function BatchQualityTab({ batchId, batch }: BatchQualityTabProps
 
           {batch.qc_notes && (
             <div className="mt-4 p-4 bg-white rounded-lg">
-              <p className="text-sm font-semibold text-dark-brown/60 mb-2">QC Notes</p>
+              <p className="text-body font-normal text-dark-brown/60 mb-2">QC Notes</p>
               <p className="text-sm text-dark-brown">{batch.qc_notes}</p>
             </div>
           )}
@@ -87,10 +88,12 @@ export default function BatchQualityTab({ batchId, batch }: BatchQualityTabProps
           <div className="bg-white border-2 border-dark-brown/5 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-heading text-lg font-bold text-primary">Test Results</h3>
-              <button className="flex items-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-colors">
-                <Plus className="w-4 h-4" />
-                Add Test
-              </button>
+              <AdminOnly>
+                <button className="flex items-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg font-semibold transition-colors">
+                  <Plus className="w-4 h-4" />
+                  Add Test
+                </button>
+              </AdminOnly>
             </div>
 
             {tests.length > 0 ? (
